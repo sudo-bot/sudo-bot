@@ -1,0 +1,27 @@
+{
+  "name": "sudo-bot",
+  "version": "1.0.0",
+  "description": "sudo bot",
+  "main": "index.js",
+  "private": true,
+  "homepage": "https://github.com/sudo-bot/sudo-bot",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --ui tdd --reporter spec"
+  },
+  "keywords": [
+    "bot"
+  ],
+  "author": "William Desportes <williamdes@wdes.fr>",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "@octokit/rest": "^15.11.2",
+    "dotenv": "^6.0.0",
+    "jsonwebtoken": "^8.3.0",
+    "openpgp": "^4.0.1",
+    "simple-git": "^1.96.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  }
+}
