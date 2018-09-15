@@ -1,2 +1,2 @@
 # sudo-bot
-Repo for sudo-bot
+Repo for @sudo-bot
