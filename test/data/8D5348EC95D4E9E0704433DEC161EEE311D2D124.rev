@@ -1,0 +1,37 @@
+Ceci est un certificat de révocation pour la clef OpenPGP :
+
+pub   rsa4096 2019-01-12 [SCEA]
+      8D5348EC95D4E9E0704433DEC161EEE311D2D124
+uid          Sudo Bot <sudo-bot@wdes.fr>
+
+A revocation certificate is a kind of "kill switch" to publicly
+declare that a key shall not anymore be used.  It is not possible
+to retract such a revocation certificate once it has been published.
+
+Use it to revoke this key in case of a compromise or loss of
+the secret key.  However, if the secret key is still accessible,
+it is better to generate a new revocation certificate and give
+a reason for the revocation.  For details see the description of
+of the gpg command "--generate-revocation" in the GnuPG manual.
+
+To avoid an accidental use of this file, a colon has been inserted
+before the 5 dashes below.  Remove this colon with a text editor
+before importing and publishing this revocation certificate.
+
+:-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: This is a revocation certificate
+
+iQI2BCABCgAgFiEEjVNI7JXU6eBwRDPewWHu4xHS0SQFAlw6OjUCHQAACgkQwWHu
+4xHS0SQAOQ/+MGCJkMh7rPD9eRL2zHabhauJYACV4Ak/V2dorwD5VoeX+OwbtHS3
+G2djtJj/6q1DvKz1bbg1O37U84iNlSShtNoOc0UBBi7PML7SORP86syeJE4YJBtw
+g/WcPErIik0n8/qLtBJocQt+qybAeICeZNmQkmf+ovkVEOOm1cMWMbmP1C41v24n
+sRQsag30w3ENO85Zl8Lcy4xLB6qSk4QP11taOMuyHtt7E0WqnJNCBrHaZUEA0MKV
+kQBlnqX7vFfNXPLVqqGWkZGLVrfdMQAxI+uS58dXWyP97y8+YzcJjLeiZSTd1zxU
+xJ0iaRPFiir02fbWIXvcDcs9zS22x7CpSWWoqjI2p2XVR2BWXnxX6qiMkCpQYObZ
+614x0V6JnmMJQRpmSX1/DtCWQiWD8nGW+dB5hIUJZzzey+Xvh/0kL6tQD7r+8tsJ
+tx846JOgLGWCLwTJyztZu2j1onDnnttmTvB9rQpNPfwJuOt9MwwgpVj61zW+l0P9
+13SgWO1vsaenKvBXVMS3lYfhlhXQMl++RSDfikn48GS5+CfRJGdPvlaZMzc47DhL
+ABi1uG+Wt8MHGlZkd8cLzvWzBWf3GSnGO6xDFaybbOu4eDs05VwyvQRUoWQAPOcG
+Ek9l/XhCHcOnSFwAKv2qkgx/9yuJFkKaaAdc5lteWPQffjTiJWax18o=
+=FkKq
+-----END PGP PUBLIC KEY BLOCK-----
