@@ -1,25 +1,24 @@
+'use strict';
+
 const openpgp = require('openpgp');
 const fs = require('fs');
 openpgp.config.show_comment = false;
 openpgp.config.show_version = false;
 
-
 /**
  * Encode the message
  * @param {string} messageRaw The raw message
  */
-const encodeMsg = function (messageRaw) {
-    return openpgp.message.fromBinary(
-        Buffer.from(messageRaw, 'utf8')
-    );
-}
+const encodeMsg = function(messageRaw) {
+    return openpgp.message.fromBinary(Buffer.from(messageRaw, 'utf8'));
+};
 
 /**
  * Sign a message
  * @param {string} messageRaw The raw message
  */
-const signCommit = function (messageRaw) {
-    const privateKeyRaw = fs.readFileSync(process.env.GPG_PRIV_PATH).toString('utf8')
+const signCommit = function(messageRaw) {
+    const privateKeyRaw = fs.readFileSync(process.env.GPG_PRIV_PATH).toString('utf8');
     //console.log("rawmsg: ", { messageRaw });
     return new Promise((resolve, reject) => {
         const message = encodeMsg(messageRaw);
@@ -57,9 +56,12 @@ const signCommit = function (messageRaw) {
                 detached: true,
             };
 
-            openpgp.sign(options).then((signed) => {
-                resolve(signed.signature.replace(/\r\n/g, '\n'));
-            }).catch(reject);
+            openpgp
+                .sign(options)
+                .then(signed => {
+                    resolve(signed.signature.replace(/\r\n/g, '\n'));
+                })
+                .catch(reject);
         });
     });
 };
@@ -69,11 +71,11 @@ const signCommit = function (messageRaw) {
  * @param {string} signatureRaw The raw signature
  * @param {string} messageRaw The raw message
  */
-const verifySignature = function (signatureRaw, messageRaw) {
-    const publicKeyRaw = fs.readFileSync(process.env.GPG_PUB_PATH).toString('utf8')
+const verifySignature = function(signatureRaw, messageRaw) {
+    const publicKeyRaw = fs.readFileSync(process.env.GPG_PUB_PATH).toString('utf8');
     //console.log("rawmsg: ", { messageRaw, signatureRaw });
     return new Promise((resolve, reject) => {
-        const message = encodeMsg(messageRaw)
+        const message = encodeMsg(messageRaw);
         openpgp.signature.readArmored(signatureRaw).then(resSignature => {
             const signature = resSignature;
             openpgp.key.readArmored(publicKeyRaw).then(pubKeys => {
@@ -85,22 +87,23 @@ const verifySignature = function (signatureRaw, messageRaw) {
                     publicKeys: publicKeys,
                 };
 
-                openpgp.verify(options).then(function (verified) {
-                    //console.log("Key ID: ", verified.signatures[0].keyid.toHex().toUpperCase())
-                    //console.log("Signature Valid: ", verified.signatures[0].valid)
-                    resolve({
-                        valid: verified.signatures[0].valid,
-                        keyId: verified.signatures[0].keyid.toHex().toUpperCase(),
+                openpgp
+                    .verify(options)
+                    .then(function(verified) {
+                        //console.log("Key ID: ", verified.signatures[0].keyid.toHex().toUpperCase())
+                        //console.log("Signature Valid: ", verified.signatures[0].valid)
+                        resolve({
+                            valid: verified.signatures[0].valid,
+                            keyId: verified.signatures[0].keyid.toHex().toUpperCase(),
+                        });
                     })
-                }).catch(reject);
-
+                    .catch(reject);
             });
         });
     });
-}
-
+};
 
 module.exports = {
-    verifySignature,
-    signCommit,
-}
+    verifySignature: verifySignature,
+    signCommit: signCommit,
+};
