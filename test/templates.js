@@ -27,7 +27,7 @@ module.exports = function() {
         });
         test('prBranch', function(done) {
             const prBranch = templates.prBranch([]);
-            expect(prBranch).to.equal('refs/heads/update/' + new Date().getTime());
+            expect(prBranch).to.match(/^refs\/heads\/update\/[0-9]{13}$/);
             done();
         });
     });
@@ -55,7 +55,7 @@ module.exports = function() {
         });
         test('prBranch', function(done) {
             const prBranch = templates.prBranch([]);
-            expect(prBranch).to.equal('refs/heads/pr_custom/' + new Date().getTime());
+            expect(prBranch).to.match(/^refs\/heads\/pr_custom\/[0-9]{13}$/);
             done();
         });
     });
