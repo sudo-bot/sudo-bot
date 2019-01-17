@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "sudo bot",
     "main": "index.js",
-    "private": true,
+    "private": false,
     "homepage": "https://github.com/sudo-bot/sudo-bot",
     "scripts": {
         "test": "nyc mocha --ui tdd --reporter spec",
