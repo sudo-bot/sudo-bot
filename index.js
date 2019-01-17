@@ -8,9 +8,13 @@ const files = require(__dirname + '/src/files');
 const templates = require(__dirname + '/src/templates');
 const targetBranch = 'master';
 
+console.log("Listing ...");
+
 files.listGitModifiedFiles(files => {
+    console.log("Listing OK !");
     const filteredFiles = files.filterAllowedFiles(files);
     git.auth(jwt.jsonwebtoken()).then(octokit => {
+        console.log("Login OK !");
         git.sendFiles(
             octokit,
             templates.commitMessage(filteredFiles),
@@ -18,6 +22,7 @@ files.listGitModifiedFiles(files => {
             targetBranch,
             templates.prBranch(filteredFiles)
         ).then(result => {
+            console.log("Files sent !");
             git.createPullRequest(
                 octokit,
                 templates.prMessage(filteredFiles),
@@ -25,6 +30,7 @@ files.listGitModifiedFiles(files => {
                 targetBranch,
                 templates.prContent(filteredFiles)
             );
+            console.log("PR done !");
         });
     });
 });

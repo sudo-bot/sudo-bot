@@ -38,5 +38,8 @@
         "trailingComma": "es5",
         "bracketSpacing": true,
         "printWidth": 95
+    },
+    "bin": {
+        "sudo-bot": "bin/sudo-bot.js"
     }
 }
