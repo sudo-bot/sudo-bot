@@ -15,11 +15,11 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
     if (enableLogging) {
         console.log('Listing ...');
     }
-    files.listGitModifiedFiles(files => {
+    files.listGitModifiedFiles(modifiedFiles => {
         if (enableLogging) {
             console.log('Listing OK !');
         }
-        const filteredFiles = files.filterAllowedFiles(files);
+        const filteredFiles = files.filterAllowedFiles(modifiedFiles);
         git.auth(jwt.jsonwebtoken()).then(octokit => {
             if (enableLogging) {
                 console.log('Login OK !');
