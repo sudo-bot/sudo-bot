@@ -1,6 +1,6 @@
 {
     "name": "sudo-bot",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A GitHub PR robot",
     "main": "index.js",
     "private": false,
@@ -19,12 +19,12 @@
     "author": "William Desportes <williamdes@wdes.fr>",
     "license": "MPL-2.0",
     "dependencies": {
-        "@octokit/rest": "^15.11.2",
-        "dotenv": "^6.0.0",
+        "@octokit/rest": "^15.18.1",
+        "dotenv": "^6.2.0",
         "ignore": "^5.0.4",
-        "jsonwebtoken": "^8.3.0",
-        "openpgp": "^4.0.1",
-        "simple-git": "^1.96.0",
+        "jsonwebtoken": "^8.4.0",
+        "openpgp": "^4.4.5",
+        "simple-git": "^1.107.0",
         "snack-cli": "^1.1.0"
     },
     "devDependencies": {
