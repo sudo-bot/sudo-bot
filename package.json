@@ -5,6 +5,18 @@
     "main": "index.js",
     "private": false,
     "homepage": "https://github.com/sudo-bot/sudo-bot",
+    "bugs": {
+        "email": "williamdes@wdes.fr",
+        "url": "https://github.com/sudo-bot/sudo-bot/issues"
+    },
+    "readme": "https://github.com/sudo-bot/sudo-bot#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sudo-bot/sudo-bot.git"
+    },
+    "engines": {
+        "node": ">=8.0.0"
+    },
     "scripts": {
         "test": "nyc mocha --ui tdd --reporter spec",
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov",

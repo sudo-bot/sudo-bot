@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * Get modifications and create a PR
+ * @param {Boolean} enableLogging Enable logging
+ * @param {String} targetBranch The target branch
+ * @param {String} envFile Path to the .env file
+ */
 const doProcess = function(enableLogging, targetBranch, envFile) {
     if (enableLogging) {
         console.log('Launching sudo bot ...');
@@ -20,9 +26,21 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
             console.log('Listing OK !');
         }
         const filteredFiles = files.filterAllowedFiles(modifiedFiles);
+        if (enableLogging) {
+            console.log('Filtering OK !');
+            console.log('Original', modifiedFiles);
+            console.log('Filter', filteredFiles);
+        }
+        if (filteredFiles.length === 0) {
+            if (enableLogging) {
+                console.log('No files to send, skipping !');
+            }
+            return;
+        }
         git.auth(jwt.jsonwebtoken()).then(octokit => {
             if (enableLogging) {
                 console.log('Login OK !');
+                console.log('Sending ...');
             }
             git.sendFiles(
                 octokit,
