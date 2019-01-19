@@ -16,10 +16,19 @@
         "pr",
         "github"
     ],
-    "author": "William Desportes <williamdes@wdes.fr>",
+    "author": {
+        "email": "williamdes@wdes.fr",
+        "name": "William Desportes",
+        "url": "https://william.wdes.fr"
+    },
+    "directories": {
+        "lib": "src",
+        "test": "test",
+        "bin": "bin"
+    },
     "license": "MPL-2.0",
     "dependencies": {
-        "@octokit/rest": "^15.18.1",
+        "@octokit/rest": "^16.10.0",
         "dotenv": "^6.2.0",
         "ignore": "^5.0.4",
         "jsonwebtoken": "^8.4.0",

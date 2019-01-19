@@ -45,7 +45,7 @@ function sendFiles(
         const owner = process.env.OWNER;
         const repo = process.env.REPO;
         octokit.repos
-            .getCommits({ owner, repo, sha: defaultBranch, per_page: 1 })
+            .listCommits({ owner, repo, sha: defaultBranch, per_page: 1 })
             .then(commitsres => {
                 const lastCommit = commitsres.data[0].sha;
                 const commitDate = new Date();
@@ -112,7 +112,7 @@ function sendFiles(
                                     .then(resultcommit => {
                                         //console.log('Commit: ', resultcommit.data);
                                         octokit.gitdata
-                                            .createReference({
+                                            .createRef({
                                                 owner,
                                                 repo,
                                                 ref: targetBranch,
