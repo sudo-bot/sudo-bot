@@ -45,7 +45,7 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
             git.sendFiles(
                 octokit,
                 templates.commitMessage(filteredFiles),
-                filteredFiles,
+                files.getModifiedFiles(filteredFiles),
                 targetBranch,
                 templates.prBranch(filteredFiles)
             ).then(result => {
