@@ -35,11 +35,7 @@ module.exports = function() {
         process.env.TEMPLATE_FILE = __dirname + '/data/template.js';
         const templates = requireUncached(__dirname + '/../src/templates');
         test('commitMessage', function(done) {
-            const commmitMsg = templates.commitMessage([
-                'a.json',
-                'ab/cd/ef.json',
-                'README.md',
-            ]);
+            const commmitMsg = templates.commitMessage(['a.json', 'ab/cd/ef.json', 'README.md']);
             expect(commmitMsg).to.equal('The commit message for 3 files');
             done();
         });
