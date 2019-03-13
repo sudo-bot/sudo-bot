@@ -1,7 +1,8 @@
 /test
-.nyc_output
+/.nyc_output
 .env
 .jshintrc
 .prettierignore
 .editorconfig
 .travis.yml
+/.dependabot
