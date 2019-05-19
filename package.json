@@ -40,20 +40,20 @@
     },
     "license": "MPL-2.0",
     "dependencies": {
-        "@octokit/rest": "^16.23.2",
-        "dotenv": "^7.0.0",
-        "ignore": "^5.0.6",
+        "@octokit/rest": "^16.26.0",
+        "dotenv": "^8.0.0",
+        "ignore": "^5.1.1",
         "jsonwebtoken": "^8.5.1",
-        "openpgp": "^4.4.10",
-        "simple-git": "^1.110.0",
+        "openpgp": "^4.5.1",
+        "simple-git": "^1.113.0",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
         "chai": "^4.2.0",
-        "codecov": "^3.3.0",
-        "mocha": "^6.0.2",
-        "nyc": "^13.3.0",
-        "prettier": "^1.16.4"
+        "codecov": "^3.5.0",
+        "mocha": "^6.1.4",
+        "nyc": "^14.1.1",
+        "prettier": "^1.17.1"
     },
     "prettier": {
         "singleQuote": true,
