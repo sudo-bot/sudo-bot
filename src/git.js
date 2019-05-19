@@ -9,10 +9,11 @@ const gpg = require(__dirname + '/gpg');
  */
 function auth(jwt) {
     return new Promise((resolve, reject) => {
-        const octokit = new Octokit();
-        octokit.authenticate({
-            type: 'app',
-            token: jwt,
+        const octokit = new Octokit({
+            auth: {
+                type: 'app',
+                token: jwt,
+            },
         });
 
         octokit.apps
@@ -40,7 +41,7 @@ function sendFiles(
     commitMsg,
     files,
     defaultBranch = 'master',
-    targetBranch = 'refs/heads/update/' + new Date.UTC().getTime()
+    targetBranch = 'refs/heads/update/' + new Date(new Date().toUTCString()).getTime()
 ) {
     return new Promise((resolve, reject) => {
         const owner = process.env.OWNER;
@@ -49,7 +50,7 @@ function sendFiles(
             .listCommits({ owner, repo, sha: defaultBranch, per_page: 1 })
             .then(commitsres => {
                 const lastCommit = commitsres.data[0].sha;
-                const commitDate = new Date.UTC();
+                const commitDate = new Date(new Date().toUTCString());
                 const identity = {
                     name: process.env.BOT_NAME,
                     email: process.env.BOT_EMAIL,
