@@ -17,4 +17,6 @@ Run `index.js`
 or using npm
 
 - `npm install sudo-bot`
-- `./node_modules/.bin/sudo-bot`
+- `npx sudo-bot`
+
+[the npm command "npx"](https://www.npmjs.com/package/npx)
