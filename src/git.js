@@ -9,20 +9,19 @@ const gpg = require(__dirname + '/gpg');
  */
 function auth(jwt) {
     return new Promise((resolve, reject) => {
-        const octokit = new Octokit({
-            auth: {
-                type: 'app',
-                token: jwt,
-            },
+        var octokitJwtInstance = new Octokit({
+            auth: jwt,
         });
 
-        octokit.apps
+        octokitJwtInstance.apps
             .createInstallationToken({
                 installation_id: process.env.INSTALLATION_ID,
             })
             .then(res => {
-                octokit.authenticate({ type: 'token', token: res.data.token });
-                resolve(octokit);
+                let octokitTokenInstance = new Octokit({
+                    auth: res.data.token,
+                });
+                resolve(octokitTokenInstance);
             })
             .catch(reject);
     });

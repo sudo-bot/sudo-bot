@@ -37,43 +37,64 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
             }
             return;
         }
-        git.auth(jwt.jsonwebtoken()).then(octokit => {
-            if (enableLogging) {
-                console.log('Login OK !');
-                console.log('Sending ...');
-            }
-            git.sendFiles(
-                octokit,
-                templates.commitMessage(filteredFiles),
-                files.getModifiedFiles(filteredFiles),
-                targetBranch,
-                templates.prBranch(filteredFiles)
-            ).then(result => {
+        git.auth(jwt.jsonwebtoken(process.env.APP_ID))
+            .then(octokit => {
                 if (enableLogging) {
-                    console.log('Files sent !');
+                    console.log('Login OK !');
+                    console.log('Sending ...');
                 }
-                git.createPullRequest(
+                git.sendFiles(
                     octokit,
-                    templates.prMessage(filteredFiles),
-                    result.ref.ref,
+                    templates.commitMessage(filteredFiles),
+                    files.getModifiedFiles(filteredFiles),
                     targetBranch,
-                    templates.prContent(filteredFiles)
+                    templates.prBranch(filteredFiles)
                 )
-                    .then(pullRequest => {
+                    .then(result => {
                         if (enableLogging) {
-                            console.log('PR done !');
+                            console.log('Files sent !');
                         }
-                        if (typeof process.env.ASSIGN_USERS === 'object') {
-                            git.addAssignees(octokit, pullRequest.number, process.env.ASSIGN_USERS).catch(err => {
+                        git.createPullRequest(
+                            octokit,
+                            templates.prMessage(filteredFiles),
+                            result.ref.ref,
+                            targetBranch,
+                            templates.prContent(filteredFiles)
+                        )
+                            .then(pullRequest => {
+                                if (enableLogging) {
+                                    console.log('PR done !');
+                                }
+                                if (typeof process.env.ASSIGN_USERS === 'string') {
+                                    const assignees = process.env.ASSIGN_USERS.split(',').map(as => as.trim());
+                                    git.addAssignees(octokit, pullRequest.data.number, assignees)
+                                        .then(res => {
+                                            if (enableLogging) {
+                                                console.log(
+                                                    'Assigned : ' + res.data.assignees.map(as => as.login).join(',')
+                                                );
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.log(err);
+                                        });
+                                } else {
+                                    if (enableLogging) {
+                                        console.log('Nobody to assign.');
+                                    }
+                                }
+                            })
+                            .catch(err => {
                                 console.log(err);
                             });
-                        }
                     })
                     .catch(err => {
                         console.log(err);
                     });
+            })
+            .catch(err => {
+                console.log(err);
             });
-        });
     });
 
     if (enableLogging) {

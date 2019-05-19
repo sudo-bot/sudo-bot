@@ -67,9 +67,11 @@ const deleteFolderRecursive = function(path) {
  * @param {Array} files The files
  */
 const filterAllowedFiles = function(files) {
-    return ignore()
-        .add(fs.readFileSync(process.env.DOT_IGNORE).toString())
-        .filter(files);
+    var ignoreFiles = ignore();
+    if (typeof process.env.DOT_IGNORE === 'string') {
+        ignoreFiles.add(fs.readFileSync(process.env.DOT_IGNORE).toString());
+    }
+    return ignoreFiles.filter(files);
 };
 
 const listGitModifiedFiles = function(cbSuccess) {
