@@ -58,7 +58,17 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
                     result.ref.ref,
                     targetBranch,
                     templates.prContent(filteredFiles)
-                );
+                )
+                    .then(pullRequest => {
+                        if (typeof process.env.ASSIGN_USERS === 'object') {
+                            git.addAssignees(octokit, pullRequest.number, process.env.ASSIGN_USERS).catch(err => {
+                                console.log(err);
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
                 if (enableLogging) {
                     console.log('PR done !');
                 }

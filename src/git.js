@@ -5,6 +5,7 @@ const gpg = require(__dirname + '/gpg');
 
 /**
  * Authenticate
+ * @param {String} jwt The jwt token
  */
 function auth(jwt) {
     return new Promise((resolve, reject) => {
@@ -63,7 +64,7 @@ function sendFiles(
                         repo,
                         tree: files.map(file => {
                             return {
-                                mode: '100644',// The file mode; one of 100644 for file (blob)
+                                mode: '100644', // The file mode; one of 100644 for file (blob)
                                 type: 'blob',
                                 path: file.path,
                                 content: file.content,
@@ -149,27 +150,34 @@ function sendFiles(
  * @param {Boolean} mcm Maintainers can modify
  */
 function createPullRequest(octokit, title, sourceBranch, targetBranch, message, mcm = true) {
-    return new Promise((resolve, reject) => {
-        const owner = process.env.OWNER;
-        const repo = process.env.REPO;
-        octokit.pullRequests
-            .create({
-                owner,
-                repo,
-                title,
-                head: sourceBranch,
-                base: targetBranch,
-                body: message,
-                maintainer_can_modify: mcm,
-            })
-            .then(result => {
-                resolve(result);
-            })
-            .catch(reject);
+    return octokit.pulls.create({
+        owner: process.env.OWNER,
+        repo: process.env.REPO,
+        title,
+        head: sourceBranch,
+        base: targetBranch,
+        body: message,
+        maintainer_can_modify: mcm,
+    });
+}
+
+/**
+ *
+ * @param {Octokit} octokit The Octikit instance
+ * @param {Number} number The issue or PR id
+ * @param {String[]} assignees The assignees
+ */
+function addAssignees(octokit, number, assignees) {
+    return octokit.issues.addAssignees({
+        owner: process.env.OWNER,
+        repo: process.env.REPO,
+        issue_number: number,
+        assignees: assignees,
     });
 }
 
 module.exports = {
+    addAssignees: addAssignees,
     createPullRequest: createPullRequest,
     sendFiles: sendFiles,
     auth: auth,
