@@ -39,7 +39,7 @@ function sendFiles(
     commitMsg,
     files,
     defaultBranch = 'master',
-    targetBranch = 'refs/heads/update/' + new Date().getTime()
+    targetBranch = 'refs/heads/update/' + new Date.UTC().getTime()
 ) {
     return new Promise((resolve, reject) => {
         const owner = process.env.OWNER;
@@ -48,7 +48,7 @@ function sendFiles(
             .listCommits({ owner, repo, sha: defaultBranch, per_page: 1 })
             .then(commitsres => {
                 const lastCommit = commitsres.data[0].sha;
-                const commitDate = new Date();
+                const commitDate = new Date.UTC();
                 const identity = {
                     name: process.env.BOT_NAME,
                     email: process.env.BOT_EMAIL,
@@ -63,7 +63,7 @@ function sendFiles(
                         repo,
                         tree: files.map(file => {
                             return {
-                                mode: '100644',
+                                mode: '100644',// The file mode; one of 100644 for file (blob)
                                 type: 'blob',
                                 path: file.path,
                                 content: file.content,
