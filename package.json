@@ -40,12 +40,12 @@
     },
     "license": "MPL-2.0",
     "dependencies": {
-        "@octokit/rest": "^16.28.2",
+        "@octokit/rest": "^16.28.3",
         "dotenv": "^8.0.0",
         "ignore": "^5.1.2",
         "jsonwebtoken": "^8.5.1",
         "openpgp": "^4.5.5",
-        "simple-git": "^1.117.0",
+        "simple-git": "^1.120.0",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
