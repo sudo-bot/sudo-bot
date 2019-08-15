@@ -40,18 +40,18 @@
     },
     "license": "MPL-2.0",
     "dependencies": {
-        "@octokit/rest": "^16.28.3",
+        "@octokit/rest": "^16.28.7",
         "dotenv": "^8.0.0",
-        "ignore": "^5.1.2",
+        "ignore": "^5.1.4",
         "jsonwebtoken": "^8.5.1",
-        "openpgp": "^4.5.5",
-        "simple-git": "^1.120.0",
+        "openpgp": "^4.6.0",
+        "simple-git": "^1.124.0",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
         "chai": "^4.2.0",
         "codecov": "^3.5.0",
-        "mocha": "^6.1.4",
+        "mocha": "^6.2.0",
         "nyc": "^14.1.1",
         "prettier": "^1.18.2"
     },
