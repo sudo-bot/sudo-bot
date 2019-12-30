@@ -19,6 +19,7 @@
     },
     "scripts": {
         "test": "nyc mocha --ui tdd --reporter spec",
+        "jshint": "jshint ./",
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
         "prettier": "prettier --ignore-path ./.prettierignore --write \"*/**/*.js\" \"*.js\"",
         "sudo-bot": "node bin/sudo-bot.js"
