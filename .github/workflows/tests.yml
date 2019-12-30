@@ -1,0 +1,38 @@
+name: Run tests
+
+on: [push]
+
+jobs:
+    test-node:
+        name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node_version: ["10", "12"]
+
+        steps:
+            - uses: actions/checkout@v1
+            - name: Use Node.js ${{ matrix.node_version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node_version }}
+            - name: Cache module
+              uses: actions/cache@v1.0.3
+              with:
+                  path: ~/.npm/
+                  key: npm-cache
+            - name: Install modules
+              run: npm ci
+            - name: Prepare files
+              run: |
+                  ssh-keygen -P "" -t rsa -b 4096 -m PEM -f jwtRS256.pem
+                  mkdir -p $PWD/test/data/testrepo
+                  echo -e "JWT_PRIV_KEY_PATH=$PWD/test/data/jwtRS256.pem\nGPG_PRIV_PATH=$PWD/test/data/sudo-bot-test.priv\nGPG_PUB_PATH=$PWD/test/data/sudo-bot-test.pub\nGPG_PRIV_PASSWORD=fYWwRmbkcd3tXSqcCrjWBCFBhzEW6ASP98zcSH\nREPO=sudo-bot\nOWNER=sudo-bot\nINSTALLATION_ID=123456\nBOT_NAME=Bot\nBOT_EMAIL=sudo-bot@wdes.fr\nREPO_DIR=/home/sudo/myrepo" > .env
+            - name: Run node tests
+              run: |
+                  npm run test
+                  npm run report-coverage
+            - name: Send coverage
+              uses: codecov/codecov-action@v1
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
