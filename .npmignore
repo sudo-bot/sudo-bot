@@ -2,6 +2,7 @@
 /.nyc_output
 .env
 .jshintrc
+.jshintignore
 .prettierignore
 .editorconfig
 /.github
