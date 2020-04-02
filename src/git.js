@@ -17,7 +17,7 @@ function auth(jwt) {
             .createInstallationToken({
                 installation_id: process.env.INSTALLATION_ID,
             })
-            .then(res => {
+            .then((res) => {
                 let octokitTokenInstance = new Octokit({
                     auth: res.data.token,
                 });
@@ -47,7 +47,7 @@ function sendFiles(
         const repo = process.env.REPO;
         octokit.repos
             .listCommits({ owner, repo, sha: defaultBranch, per_page: 1 })
-            .then(commitsres => {
+            .then((commitsres) => {
                 const lastCommit = commitsres.data[0].sha;
                 const commitDate = new Date(new Date().toUTCString());
                 const identity = {
@@ -62,7 +62,7 @@ function sendFiles(
                     .createTree({
                         owner,
                         repo,
-                        tree: files.map(file => {
+                        tree: files.map((file) => {
                             return {
                                 mode: '100644', // The file mode; one of 100644 for file (blob)
                                 type: 'blob',
@@ -72,7 +72,7 @@ function sendFiles(
                         }),
                         base_tree: lastCommit,
                     })
-                    .then(treeres => {
+                    .then((treeres) => {
                         let gpgMsg =
                             'tree ' +
                             treeres.data.sha +
@@ -98,7 +98,7 @@ function sendFiles(
                             '\n\n' +
                             commitMsg;
                         gpg.signCommit(gpgMsg)
-                            .then(signature => {
+                            .then((signature) => {
                                 octokit.gitdata
                                     .createCommit({
                                         owner,
@@ -110,7 +110,7 @@ function sendFiles(
                                         author: identity,
                                         signature: signature,
                                     })
-                                    .then(resultcommit => {
+                                    .then((resultcommit) => {
                                         //console.log('Commit: ', resultcommit.data);
                                         octokit.gitdata
                                             .createRef({
@@ -119,7 +119,7 @@ function sendFiles(
                                                 ref: targetBranch,
                                                 sha: resultcommit.data.sha,
                                             })
-                                            .then(resultrefcreate => {
+                                            .then((resultrefcreate) => {
                                                 /*console.log(
                                                     'Ref-url: ',
                                                     resultrefcreate.data.url

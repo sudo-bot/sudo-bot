@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports = function() {
-    suite('git', function() {});
+module.exports = function () {
+    suite('git', function () {});
 };

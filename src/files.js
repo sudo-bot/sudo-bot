@@ -31,9 +31,9 @@ function fileToString(file) {
  * @param {Array} fsFiles The files paths
  * @returns {Array} The files
  */
-const getModifiedFiles = function(fsFiles) {
+const getModifiedFiles = function (fsFiles) {
     var files = [];
-    fsFiles.map(file => {
+    fsFiles.map((file) => {
         files.push({
             path: file,
             content: fileToString(path.join(process.env.REPO_DIR, file)),
@@ -46,9 +46,9 @@ const getModifiedFiles = function(fsFiles) {
  * The path
  * @param {string} path The path
  */
-const deleteFolderRecursive = function(path) {
+const deleteFolderRecursive = function (path) {
     if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function(file, index) {
+        fs.readdirSync(path).forEach(function (file, index) {
             var curPath = path + '/' + file;
             if (fs.lstatSync(curPath).isDirectory()) {
                 // recurse
@@ -66,7 +66,7 @@ const deleteFolderRecursive = function(path) {
  * Filter alowed files using ignore
  * @param {Array} files The files
  */
-const filterAllowedFiles = function(files) {
+const filterAllowedFiles = function (files) {
     var ignoreFiles = ignore();
     if (typeof process.env.DOT_IGNORE === 'string') {
         ignoreFiles.add(fs.readFileSync(process.env.DOT_IGNORE).toString());
@@ -74,7 +74,7 @@ const filterAllowedFiles = function(files) {
     return ignoreFiles.filter(files);
 };
 
-const listGitModifiedFiles = function(cbSuccess) {
+const listGitModifiedFiles = function (cbSuccess) {
     require('simple-git')(process.env.REPO_DIR).status((err, status) => {
         cbSuccess(status.modified);
     });

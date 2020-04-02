@@ -8,7 +8,7 @@ const fs = require('fs');
  * @param {Number} appId The application Id (not the installation ID)
  * @return {String} The jwt
  */
-const jsonwebtoken = function(appId) {
+const jsonwebtoken = function (appId) {
     const cert = fs.readFileSync(process.env.JWT_PRIV_KEY_PATH);
     const now = Math.floor(Date.now() / 1000);
     const payload = {

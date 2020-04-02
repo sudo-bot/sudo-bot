@@ -4,7 +4,7 @@
  * @param {Array} modifiedFiles The modified files
  * @returns {string} The commit message
  */
-const commitMessage = function(modifiedFiles) {
+const commitMessage = function (modifiedFiles) {
     return 'The commit message for ' + modifiedFiles.length + ' files';
 };
 
@@ -12,7 +12,7 @@ const commitMessage = function(modifiedFiles) {
  * @param {Array} modifiedFiles The modified files
  * @returns {string} The pr message
  */
-const prMessage = function(modifiedFiles) {
+const prMessage = function (modifiedFiles) {
     return '🤖 The PR message for ' + modifiedFiles.length + ' files 🚨';
 };
 
@@ -20,7 +20,7 @@ const prMessage = function(modifiedFiles) {
  * @param {Array} modifiedFiles The modified files
  * @returns {string} The pr content
  */
-const prContent = function(modifiedFiles) {
+const prContent = function (modifiedFiles) {
     return 'Files:\n' + modifiedFiles.join(',') + '\n🤖';
 };
 
@@ -28,7 +28,7 @@ const prContent = function(modifiedFiles) {
  * @param {Array} modifiedFiles The modified files
  * @returns {string} The pr branch
  */
-const prBranch = function(modifiedFiles) {
+const prBranch = function (modifiedFiles) {
     return 'refs/heads/pr_custom/' + new Date().getTime();
 };
 

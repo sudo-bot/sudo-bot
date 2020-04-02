@@ -6,7 +6,7 @@
  * @param {String} targetBranch The target branch
  * @param {String} envFile Path to the .env file
  */
-const doProcess = function(enableLogging, targetBranch, envFile) {
+const doProcess = function (enableLogging, targetBranch, envFile) {
     if (enableLogging) {
         console.log('Launching sudo bot ...');
     }
@@ -21,7 +21,7 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
     if (enableLogging) {
         console.log('Listing ...');
     }
-    files.listGitModifiedFiles(modifiedFiles => {
+    files.listGitModifiedFiles((modifiedFiles) => {
         if (enableLogging) {
             console.log('Listing OK !');
         }
@@ -38,7 +38,7 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
             return;
         }
         git.auth(jwt.jsonwebtoken(process.env.APP_ID))
-            .then(octokit => {
+            .then((octokit) => {
                 if (enableLogging) {
                     console.log('Login OK !');
                     console.log('Sending ...');
@@ -50,7 +50,7 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
                     targetBranch,
                     templates.prBranch(filteredFiles)
                 )
-                    .then(result => {
+                    .then((result) => {
                         if (enableLogging) {
                             console.log('Files sent !');
                         }
@@ -61,21 +61,21 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
                             targetBranch,
                             templates.prContent(filteredFiles)
                         )
-                            .then(pullRequest => {
+                            .then((pullRequest) => {
                                 if (enableLogging) {
                                     console.log('PR done !');
                                 }
                                 if (typeof process.env.ASSIGN_USERS === 'string') {
-                                    const assignees = process.env.ASSIGN_USERS.split(',').map(as => as.trim());
+                                    const assignees = process.env.ASSIGN_USERS.split(',').map((as) => as.trim());
                                     git.addAssignees(octokit, pullRequest.data.number, assignees)
-                                        .then(res => {
+                                        .then((res) => {
                                             if (enableLogging) {
                                                 console.log(
-                                                    'Assigned : ' + res.data.assignees.map(as => as.login).join(',')
+                                                    'Assigned : ' + res.data.assignees.map((as) => as.login).join(',')
                                                 );
                                             }
                                         })
-                                        .catch(err => {
+                                        .catch((err) => {
                                             console.log(err);
                                         });
                                 } else {
@@ -84,15 +84,15 @@ const doProcess = function(enableLogging, targetBranch, envFile) {
                                     }
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 console.log(err);
                             });
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     });

@@ -4,9 +4,9 @@ const files = require(__dirname + '/../src/files');
 const fs = require('fs');
 const expect = require('chai').expect;
 
-module.exports = function() {
-    suite('files', function() {
-        test('filterAllowedFiles', function(done) {
+module.exports = function () {
+    suite('files', function () {
+        test('filterAllowedFiles', function (done) {
             process.env.DOT_IGNORE = __dirname + '/data/.sudoignore';
             const fileFiltered = files.filterAllowedFiles([
                 'ignore-file.json',
@@ -16,7 +16,7 @@ module.exports = function() {
             expect(fileFiltered).to.deep.equal(['package-lock.json', 'a-ignore-file.json']);
             done();
         });
-        test('listGitModifiedFiles', function(done) {
+        test('listGitModifiedFiles', function (done) {
             const repoDir = __dirname + '/data/testrepo/';
             process.env.REPO_DIR = repoDir;
             files.deleteFolderRecursive(repoDir + '.git');
@@ -33,7 +33,7 @@ module.exports = function() {
                         },
                         () => {
                             fs.writeFileSync(repoDir + 'README.md', '# changed');
-                            files.listGitModifiedFiles(modifiedFiles => {
+                            files.listGitModifiedFiles((modifiedFiles) => {
                                 expect(modifiedFiles).to.deep.equal(['README.md']);
                                 fs.unlinkSync(repoDir + 'README.md');
                                 files.deleteFolderRecursive(repoDir + '.git');
@@ -44,7 +44,7 @@ module.exports = function() {
                 });
             });
         });
-        test('getModifiedFiles', function(done) {
+        test('getModifiedFiles', function (done) {
             const repoDir = __dirname + '/data/testrepo/';
             process.env.REPO_DIR = repoDir;
             fs.writeFileSync(repoDir + 'README.md', '#test');
@@ -58,7 +58,7 @@ module.exports = function() {
             fs.unlinkSync(repoDir + 'README.md');
             done();
         });
-        test('base64Encode', function(done) {
+        test('base64Encode', function (done) {
             const repoDir = __dirname + '/data/testrepo/';
             process.env.REPO_DIR = repoDir;
             fs.writeFileSync(repoDir + 'README.md', '#test');
@@ -67,7 +67,7 @@ module.exports = function() {
             fs.unlinkSync(repoDir + 'README.md');
             done();
         });
-        test('deleteFolderRecursive', function(done) {
+        test('deleteFolderRecursive', function (done) {
             files.deleteFolderRecursive('.efefefefzfzfef');
             done();
         });
