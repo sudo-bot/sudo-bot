@@ -1463,9 +1463,9 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
     wrappy "1"
 
 openpgp@^4.10.1:
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-4.10.1.tgz#1f9202768ba8318c0319acfa471985c6d45e966a"
-  integrity sha512-0dtLhg4/NSMRIiaj/PH+NYqCRYOEjiUQs3F6Oy1Lw0gERJLumnLbteG3YYdq7CgR13HlMVDZRBSVG35a8Q+yJQ==
+  version "4.10.4"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-4.10.4.tgz#453ae856052bcedc78ac1556ffbc2210348151f3"
+  integrity sha512-JMceIvDDE9Qko2AsMpVgf4YM7h7zPt3sZT0qnOIvwynuDuTs+wL5ht37t894hirgzSHr2d+64nEnKbBtwoYwSQ==
   dependencies:
     asn1.js "^5.0.0"
     node-fetch "^2.1.2"
