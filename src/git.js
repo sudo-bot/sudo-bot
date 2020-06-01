@@ -1,6 +1,6 @@
 'use strict';
 
-const Octokit = require('@octokit/rest');
+const { Octokit } = require('@octokit/rest');
 const gpg = require(__dirname + '/gpg');
 
 /**
@@ -58,7 +58,7 @@ function sendFiles(
                 const unixTime = Math.floor(commitDate / 1000);
 
                 //@see: https://developer.github.com/v3/git/trees/#create-a-tree
-                octokit.gitdata
+                octokit.git
                     .createTree({
                         owner,
                         repo,
@@ -99,7 +99,7 @@ function sendFiles(
                             commitMsg;
                         gpg.signCommit(gpgMsg)
                             .then((signature) => {
-                                octokit.gitdata
+                                octokit.git
                                     .createCommit({
                                         owner,
                                         repo,
@@ -112,7 +112,7 @@ function sendFiles(
                                     })
                                     .then((resultcommit) => {
                                         //console.log('Commit: ', resultcommit.data);
-                                        octokit.gitdata
+                                        octokit.git
                                             .createRef({
                                                 owner,
                                                 repo,
