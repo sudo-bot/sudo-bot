@@ -46,7 +46,7 @@
         "ignore": "^5.1.4",
         "jsonwebtoken": "^8.5.1",
         "openpgp": "^4.10.1",
-        "simple-git": "^1.132.0",
+        "simple-git": "^2.5.0",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
