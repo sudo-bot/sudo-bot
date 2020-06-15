@@ -41,24 +41,24 @@
     },
     "license": "MPL-2.0",
     "dependencies": {
-        "@octokit/rest": "^17.9.2",
+        "@octokit/rest": "^18.0.0",
         "dotenv": "^8.2.0",
         "ignore": "^5.1.8",
         "jsonwebtoken": "^8.5.1",
         "openpgp": "^4.10.4",
-        "simple-git": "^2.5.0",
+        "simple-git": "^2.6.0",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
         "@types/jsonwebtoken": "^8.5.0",
-        "@types/node": "^14.0.7",
+        "@types/node": "^14.0.13",
         "@types/openpgp": "^4.4.12",
         "chai": "^4.2.0",
         "jshint": "^2.11.1",
-        "mocha": "^7.2.0",
+        "mocha": "^8.0.1",
         "nyc": "^15.1.0",
         "prettier": "^2.0.5",
-        "typescript": "^3.9.3"
+        "typescript": "^3.9.5"
     },
     "prettier": {
         "singleQuote": true,
