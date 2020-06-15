@@ -2,4 +2,4 @@
 
 process.env.TZ = 'UTC';
 
-require(__dirname + '/src/index')(true, 'master', __dirname + '/.env');
+require(__dirname + '/src/index')(true, 'main', __dirname + '/.env');

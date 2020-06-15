@@ -8,7 +8,7 @@ var argv = cli
     .usage('[options]')
     .description(packageJson.description)
     .option('    --env <file>', 'ENV file')
-    .option('    --target-branch <branch>', 'target PR branch', 'master')
+    .option('    --target-branch <branch>', 'target PR branch', 'main')
     .option('    --verbose', 'turn on logging', false)
     .allowArgumentCount(1)
     .parse();
