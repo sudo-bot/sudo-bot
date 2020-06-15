@@ -7,3 +7,4 @@
 .editorconfig
 /.github
 /.dependabot
+/*.log
