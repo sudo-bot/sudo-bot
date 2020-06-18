@@ -1,7 +1,7 @@
 'use strict';
 
-const openpgp = require('openpgp');
-const fs = require('fs');
+import * as openpgp from 'openpgp';
+import * as fs from 'fs';
 openpgp.config.show_comment = false;
 openpgp.config.show_version = false;
 
@@ -9,7 +9,7 @@ openpgp.config.show_version = false;
  * Encode the message
  * @param {string} messageRaw The raw message
  */
-const encodeMsg = function (messageRaw) {
+const encodeMsg = function (messageRaw: string) {
     return openpgp.message.fromBinary(Buffer.from(messageRaw, 'utf8'));
 };
 
@@ -17,15 +17,15 @@ const encodeMsg = function (messageRaw) {
  * Sign a message
  * @param {string} messageRaw The raw message
  */
-const signCommit = function (messageRaw) {
-    const privateKeyRaw = fs.readFileSync(process.env.GPG_PRIV_PATH).toString('utf8');
+const signCommit = function (messageRaw: string): Promise<string> {
+    const privateKeyRaw = fs.readFileSync(process.env.GPG_PRIV_PATH || '').toString('utf8');
     //console.log("rawmsg: ", { messageRaw });
-    return new Promise((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
         const message = encodeMsg(messageRaw);
         openpgp.key.readArmored(privateKeyRaw).then((privKeys) => {
             const privateKeys = privKeys.keys;
             privateKeys.map((key) => {
-                key.decrypt(process.env.GPG_PRIV_PASSWORD);
+                key.decrypt(process.env.GPG_PRIV_PASSWORD || '');
                 /*console.log("pub", key.isPublic());
                 console.log("priv", key.isPrivate());
                 console.log("uids", key.getUserIds());
@@ -71,8 +71,8 @@ const signCommit = function (messageRaw) {
  * @param {string} signatureRaw The raw signature
  * @param {string} messageRaw The raw message
  */
-const verifySignature = function (signatureRaw, messageRaw) {
-    const publicKeyRaw = fs.readFileSync(process.env.GPG_PUB_PATH).toString('utf8');
+const verifySignature = function (signatureRaw: string, messageRaw: string) {
+    const publicKeyRaw = fs.readFileSync(process.env.GPG_PUB_PATH || '').toString('utf8');
     //console.log("rawmsg: ", { messageRaw, signatureRaw });
     return new Promise((resolve, reject) => {
         const message = encodeMsg(messageRaw);
@@ -94,7 +94,8 @@ const verifySignature = function (signatureRaw, messageRaw) {
                         //console.log("Signature Valid: ", verified.signatures[0].valid)
                         resolve({
                             valid: verified.signatures[0].valid,
-                            keyId: verified.signatures[0].keyid.toHex().toUpperCase(),
+                            //FIXME: bad code
+                            keyId: (verified.signatures[0].keyid as any).toHex().toUpperCase(),
                         });
                     })
                     .catch(reject);
@@ -103,7 +104,8 @@ const verifySignature = function (signatureRaw, messageRaw) {
     });
 };
 
-module.exports = {
+
+export default {
     verifySignature: verifySignature,
     signCommit: signCommit,
 };

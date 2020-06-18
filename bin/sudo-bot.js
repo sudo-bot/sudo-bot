@@ -13,4 +13,4 @@ var argv = cli
     .allowArgumentCount(1)
     .parse();
 
-require(__dirname + '/../src/index')(argv.verbose, argv.targetBranch, argv.env);
+require(__dirname + '/../dist/index').default(argv.verbose, argv.targetBranch, argv.env);

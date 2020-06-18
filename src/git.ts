@@ -1,24 +1,24 @@
 'use strict';
 
-const { Octokit } = require('@octokit/rest');
-const gpg = require(__dirname + '/gpg');
+import { Octokit } from '@octokit/rest';
+import gpg from './gpg';
+import { LocalFile } from './files';
 
 /**
  * Authenticate
- * @param {String} jwt The jwt token
  */
-function auth(jwt) {
+function auth(jwt: string): Promise<Octokit> {
     return new Promise((resolve, reject) => {
         var octokitJwtInstance = new Octokit({
             auth: jwt,
         });
 
         octokitJwtInstance.apps
-            .createInstallationToken({
-                installation_id: process.env.INSTALLATION_ID,
+            .createInstallationAccessToken({
+                installation_id: parseInt(process.env.INSTALLATION_ID || ''),
             })
             .then((res) => {
-                let octokitTokenInstance = new Octokit({
+                let octokitTokenInstance: Octokit = new Octokit({
                     auth: res.data.token,
                 });
                 resolve(octokitTokenInstance);
@@ -31,20 +31,23 @@ function auth(jwt) {
  * Send files in a commit
  * @param {Octokit} octokit The Octokit instance
  * @param {string} commitMsg The commit message
- * @param {array} files The files
+ * @param {LocalFile[]} files The files
  * @param {string} defaultBranch The default branch for base commit
  * @param {string} targetBranch The target branch for the commit
  */
 function sendFiles(
-    octokit,
-    commitMsg,
-    files,
-    defaultBranch = 'master',
-    targetBranch = 'refs/heads/update/' + new Date(new Date().toUTCString()).getTime()
-) {
+    octokit: Octokit,
+    commitMsg: string,
+    files: LocalFile[],
+    defaultBranch: string = 'main',
+    targetBranch: string = 'refs/heads/update/' + new Date(new Date().toUTCString()).getTime()
+): Promise<{
+    ref: any,
+    commit: any,
+}> {
     return new Promise((resolve, reject) => {
-        const owner = process.env.OWNER;
-        const repo = process.env.REPO;
+        const owner = process.env.OWNER || '';
+        const repo = process.env.REPO || '';
         octokit.repos
             .listCommits({ owner, repo, sha: defaultBranch, per_page: 1 })
             .then((commitsres) => {
@@ -55,7 +58,7 @@ function sendFiles(
                     email: process.env.BOT_EMAIL,
                     date: commitDate.toISOString(), //YYYY-MM-DDTHH:MM:SSZ
                 };
-                const unixTime = Math.floor(commitDate / 1000);
+                const unixTime = Math.floor(commitDate.valueOf() / 1000);
 
                 //@see: https://developer.github.com/v3/git/trees/#create-a-tree
                 octokit.git
@@ -147,12 +150,12 @@ function sendFiles(
  * @param {string} sourceBranch The source branch
  * @param {string} targetBranch The target branch
  * @param {string} message The message
- * @param {Boolean} mcm Maintainers can modify
+ * @param {boolean} mcm Maintainers can modify
  */
-function createPullRequest(octokit, title, sourceBranch, targetBranch, message, mcm = true) {
+function createPullRequest(octokit: Octokit, title: string, sourceBranch: string, targetBranch: string, message: string, mcm: boolean = true) {
     return octokit.pulls.create({
-        owner: process.env.OWNER,
-        repo: process.env.REPO,
+        owner: process.env.OWNER || '',
+        repo: process.env.REPO || '',
         title,
         head: sourceBranch,
         base: targetBranch,
@@ -163,20 +166,20 @@ function createPullRequest(octokit, title, sourceBranch, targetBranch, message, 
 
 /**
  *
- * @param {Octokit} octokit The Octikit instance
- * @param {Number} number The issue or PR id
- * @param {String[]} assignees The assignees
+ * @param {Octokit} octokit The Octokit instance
+ * @param {number} number The issue or PR id
+ * @param {string[]} assignees The assignees
  */
-function addAssignees(octokit, number, assignees) {
+function addAssignees(octokit: Octokit, number: number, assignees: string[]) {
     return octokit.issues.addAssignees({
-        owner: process.env.OWNER,
-        repo: process.env.REPO,
+        owner: process.env.OWNER || '',
+        repo: process.env.REPO || '',
         issue_number: number,
         assignees: assignees,
     });
 }
 
-module.exports = {
+export default {
     addAssignees: addAssignees,
     createPullRequest: createPullRequest,
     sendFiles: sendFiles,

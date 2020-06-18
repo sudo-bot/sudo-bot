@@ -1,22 +1,22 @@
 'use strict';
 
+import jwt from './jwt';
+import git from './git';
+import files from './files';
+import templates from './templates';
+
 /**
  * Get modifications and create a PR
- * @param {Boolean} enableLogging Enable logging
- * @param {String} targetBranch The target branch
- * @param {String} envFile Path to the .env file
+ * @param {boolean} enableLogging Enable logging
+ * @param {string} targetBranch The target branch
+ * @param {string} envFile Path to the .env file
  */
-const doProcess = function (enableLogging, targetBranch, envFile) {
+const doProcess = function (enableLogging: boolean, targetBranch: string, envFile: string): void {
     if (enableLogging) {
         console.log('Launching sudo bot ...');
     }
 
     require('dotenv').config({ path: envFile });
-
-    const jwt = require(__dirname + '/jwt');
-    const git = require(__dirname + '/git');
-    const files = require(__dirname + '/files');
-    const templates = require(__dirname + '/templates');
 
     if (enableLogging) {
         console.log('Listing ...');
@@ -37,7 +37,7 @@ const doProcess = function (enableLogging, targetBranch, envFile) {
             }
             return;
         }
-        git.auth(jwt.jsonwebtoken(process.env.APP_ID))
+        git.auth(jwt.jsonwebtoken(process.env.APP_ID || ''))
             .then((octokit) => {
                 if (enableLogging) {
                     console.log('Login OK !');
@@ -102,4 +102,4 @@ const doProcess = function (enableLogging, targetBranch, envFile) {
     }
 };
 
-module.exports = doProcess;
+export default doProcess;

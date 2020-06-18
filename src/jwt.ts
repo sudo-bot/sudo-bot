@@ -1,15 +1,15 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
+import * as jwt from 'jsonwebtoken';
+import * as fs from 'fs';
 
 /**
  * Get a jwt
  * @param {Number} appId The application Id (not the installation ID)
  * @return {String} The jwt
  */
-const jsonwebtoken = function (appId) {
-    const cert = fs.readFileSync(process.env.JWT_PRIV_KEY_PATH);
+const jsonwebtoken = function (appId: string) {
+    const cert = fs.readFileSync(process.env.JWT_PRIV_KEY_PATH || '');
     const now = Math.floor(Date.now() / 1000);
     const payload = {
         iat: now, // Issued at time
@@ -19,6 +19,6 @@ const jsonwebtoken = function (appId) {
     return jwt.sign(payload, cert, { algorithm: 'RS256' });
 };
 
-module.exports = {
+export default {
     jsonwebtoken: jsonwebtoken,
 };
