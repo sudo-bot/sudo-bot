@@ -2,7 +2,7 @@
     "name": "sudo-bot",
     "version": "1.1.11",
     "description": "A GitHub PR robot",
-    "main": "index.js",
+    "main": "dist/index.js",
     "private": false,
     "homepage": "https://github.com/sudo-bot/sudo-bot",
     "bugs": {
@@ -22,7 +22,8 @@
         "jshint": "jshint ./",
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
         "prettier": "prettier --ignore-path ./.prettierignore --write \"*/**/*.js\" \"*.js\"",
-        "sudo-bot": "node bin/sudo-bot.js"
+        "sudo-bot": "node bin/sudo-bot.js",
+        "build": "tsc"
     },
     "keywords": [
         "bot",
