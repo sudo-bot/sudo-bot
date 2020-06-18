@@ -1,10 +1,13 @@
 'use strict';
 
-const gpg = require(__dirname + '/../src/gpg');
+const gpg = require(__dirname + '/../dist/gpg').default;
 const expect = require('chai').expect;
 
 module.exports = function () {
     suite('gpg', function () {
+        process.env.GPG_PRIV_PATH = process.env.GPG_PRIV_PATH || __dirname + '/data/sudo-bot-test.priv';
+        process.env.GPG_PUB_PATH = process.env.GPG_PUB_PATH || __dirname + '/data/sudo-bot-test.pub';
+        process.env.GPG_PRIV_PASSWORD = process.env.GPG_PRIV_PASSWORD || 'fYWwRmbkcd3tXSqcCrjWBCFBhzEW6ASP98zcSH';
         test('testAutoSign', function (done) {
             const testMessage = '';
             gpg.signCommit(testMessage)

@@ -9,7 +9,7 @@ function requireUncached(module) {
 
 module.exports = function () {
     suite('default templates', function () {
-        const templates = requireUncached(__dirname + '/../src/templates');
+        const templates = requireUncached(__dirname + '/../dist/templates').default;
         test('commitMessage', function (done) {
             const commmitMsg = templates.commitMessage([]);
             expect(commmitMsg).to.equal('Some files to update');
@@ -33,7 +33,7 @@ module.exports = function () {
     });
     suite('custom templates', function () {
         process.env.TEMPLATE_FILE = __dirname + '/data/template.js';
-        const templates = requireUncached(__dirname + '/../src/templates');
+        const templates = requireUncached(__dirname + '/../dist/templates').default;
         test('commitMessage', function (done) {
             const commmitMsg = templates.commitMessage(['a.json', 'ab/cd/ef.json', 'README.md']);
             expect(commmitMsg).to.equal('The commit message for 3 files');

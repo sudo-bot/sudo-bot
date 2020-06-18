@@ -1,6 +1,6 @@
 'use strict';
 
-const files = require(__dirname + '/../src/files');
+const files = require(__dirname + '/../dist/files').default;
 const fs = require('fs');
 const expect = require('chai').expect;
 
