@@ -8,7 +8,7 @@ suite('cli', function () {
     const binSudoBot: string = __dirname + '/../bin/sudo-bot.js';
     test('--env missing', function (done) {
         exec(binSudoBot, (err, stdout, stderr) => {
-            expect(err).to.equal(null);
+            expect(err).to.not.equal(null);
             expect(stderr).to.equal(
                 '\n  error: option `--env <file>` missing\n\n  Try `sudo-bot --help` for more information.\n\n'
             );
