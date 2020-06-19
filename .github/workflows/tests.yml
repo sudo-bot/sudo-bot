@@ -30,10 +30,9 @@ jobs:
               run: yarn install
             - name: Prepare files
               run: |
+                  env node -v
                   ssh-keygen -P "" -t rsa -b 4096 -m PEM -f jwtRS256.pem
                   mkdir -p $PWD/test/data/testrepo
-                  git config --global user.email "sudo-bot+ci@wdes.fr"
-                  git config --global user.name "Sudo Bot"
             - name: Run node tests
               run: |
                   yarn run test
