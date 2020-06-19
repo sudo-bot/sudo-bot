@@ -2,7 +2,7 @@
     "name": "sudo-bot",
     "version": "1.2.0",
     "description": "A GitHub PR robot",
-    "main": "dist/index.js",
+    "main": "bin/sudo-bot.js",
     "private": false,
     "homepage": "https://github.com/sudo-bot/sudo-bot",
     "bugs": {
@@ -14,14 +14,17 @@
         "type": "git",
         "url": "https://github.com/sudo-bot/sudo-bot.git"
     },
+    "bin": {
+        "sudo-bot": "bin/sudo-bot.js"
+    },
     "engines": {
         "node": ">=8.0.0"
     },
     "scripts": {
-        "test": "yarn run -s build && nyc mocha --ui tdd --reporter spec",
+        "test": "yarn run -s build && nyc mocha --ui tdd --reporter spec test/*.ts",
         "jshint": "jshint ./",
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
-        "prettier": "prettier --ignore-path ./.prettierignore --write \"*/**/*.js\" \"*.js\"",
+        "prettier": "prettier --ignore-path ./.prettierignore --write \"*/**/*.js\" \"*/**/*.ts\"",
         "sudo-bot": "node bin/sudo-bot.js",
         "build": "tsc"
     },
@@ -71,7 +74,26 @@
         "bracketSpacing": true,
         "printWidth": 120
     },
-    "bin": {
-        "sudo-bot": "bin/sudo-bot.js"
+    "nyc": {
+        "extension": [
+            ".ts"
+        ],
+        "require": [
+            "source-map-support/register",
+            "ts-node/register"
+        ],
+        "exclude": [
+            "index.ts",
+            "**/node_modules/**",
+            "dist",
+            "test",
+            "coverage",
+            ".nyc_output"
+        ],
+        "reporter": [
+            "text",
+            "text-summary"
+        ],
+        "all": true
     }
 }
