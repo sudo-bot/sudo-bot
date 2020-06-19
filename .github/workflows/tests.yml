@@ -6,16 +6,14 @@ jobs:
     test-node:
         name: Test on node ${{ matrix.node_version }}
         runs-on: ubuntu-latest
+        container:
+            image: node:${{ matrix.node_version }}-alpine
         strategy:
             matrix:
                 node_version: ["10", "12"]
 
         steps:
             - uses: actions/checkout@v1
-            - name: Use Node.js ${{ matrix.node_version }}
-              uses: actions/setup-node@v1
-              with:
-                  node-version: ${{ matrix.node_version }}
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "::set-output name=dir::$(yarn cache dir)"
