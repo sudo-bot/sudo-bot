@@ -1,7 +1,7 @@
 'use strict';
 
 import { expect } from 'chai';
-import { suite } from 'mocha';
+import { suite, before } from 'mocha';
 
 function requireUncached(module: string) {
     delete require.cache[require.resolve(module)];
@@ -9,6 +9,9 @@ function requireUncached(module: string) {
 }
 
 suite('default templates', function () {
+    before(() => {
+        process.env = {};
+    });
     const templates = requireUncached(__dirname + '/../src/templates').default;
     test('commitMessage', function (done) {
         const commmitMsg = templates.commitMessage([]);
@@ -32,6 +35,7 @@ suite('default templates', function () {
     });
 });
 suite('custom templates', function () {
+    process.env = {};
     process.env.TEMPLATE_FILE = __dirname + '/data/template.js';
     const templates = requireUncached(__dirname + '/../src/templates').default;
     test('commitMessage', function (done) {

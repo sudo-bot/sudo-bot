@@ -1,11 +1,14 @@
 'use strict';
 
 import { expect } from 'chai';
-import { suite } from 'mocha';
+import { suite, before } from 'mocha';
 import { exec } from 'child_process';
 
 suite('cli', function () {
     const binSudoBot: string = __dirname + '/../bin/sudo-bot.js';
+    before(() => {
+        process.env = {};
+    });
     test('--env missing', function (done) {
         exec(binSudoBot, (err, stdout, stderr) => {
             expect(err).to.not.equal(null);
@@ -24,7 +27,7 @@ suite('cli', function () {
         exec(binSudoBot + ' --env ' + __dirname + '/../.env.dist', (err, stdout, stderr) => {
             expect(err).to.equal(null);
             expect(stdout).to.equal('');
-            expect(stderr).to.contain('Error: Missing APP_ID ENV.');
+            expect(stderr).to.match(/Error: Missing APP_ID ENV/m);
             done();
         });
     });
@@ -33,10 +36,11 @@ suite('cli', function () {
         process.env.APP_ID = '123654';
         process.env.REPO_DIR = __dirname + '/../';
         process.env.DOT_IGNORE = __dirname + '/../.gitignore';
+        process.env.JWT_PRIV_KEY_PATH = process.env.JWT_PRIV_KEY_PATH || __dirname + '/data/jwtRS256.pem';
         exec(binSudoBot + ' --env ' + __dirname + '/../.env.dist', (err, stdout, stderr) => {
             expect(err).to.equal(null);
             expect(stdout).to.equal('');
-            expect(stderr).to.contain('Error: Missing INSTALLATION_ID ENV.');
+            expect(stderr).to.match(/Error: Missing INSTALLATION_ID ENV/m);
             done();
         });
     });

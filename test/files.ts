@@ -3,46 +3,53 @@
 import files from '../src/files';
 import * as fs from 'fs';
 import { expect } from 'chai';
-import { suite } from 'mocha';
+import { suite, before } from 'mocha';
+import simpleGit, { SimpleGit } from 'simple-git';
 
 suite('files', function () {
-    test('filterAllowedFiles', function (done) {
+    const repoDir = __dirname + '/data/testrepo/';
+    before(() => {
+        process.env = {};
         process.env.DOT_IGNORE = __dirname + '/data/.sudoignore';
+        process.env.REPO_DIR = repoDir;
+    });
+    test('filterAllowedFiles', function (done) {
         const fileFiltered = files.filterAllowedFiles(['ignore-file.json', 'package-lock.json', 'a-ignore-file.json']);
         expect(fileFiltered).to.deep.equal(['package-lock.json', 'a-ignore-file.json']);
         done();
     });
     test('listGitModifiedFiles', function (done) {
-        const repoDir = __dirname + '/data/testrepo/';
-        process.env.REPO_DIR = repoDir;
         files.deleteFolderRecursive(repoDir + '.git');
         fs.mkdirSync(repoDir + '.git');
-        const git = require('simple-git')(repoDir);
-        git.init(false, () => {
-            fs.writeFileSync(repoDir + 'README.md', '#test');
-            git.add('.', () => {
-                git.commit(
-                    '__INIT__',
-                    ['README.md'],
-                    {
-                        '--no-gpg-sign': null,
-                    },
-                    () => {
-                        fs.writeFileSync(repoDir + 'README.md', '# changed');
-                        files.listGitModifiedFiles(
-                            repoDir,
-                            (modifiedFiles) => {
-                                expect(modifiedFiles).to.deep.equal(['README.md']);
-                                fs.unlinkSync(repoDir + 'README.md');
-                                files.deleteFolderRecursive(repoDir + '.git');
-                                done();
-                            },
-                            () => {}
-                        );
-                    }
-                );
-            });
-        });
+        const git: SimpleGit = simpleGit(repoDir);
+        git.init(false)
+            .then(() => {
+                git.addConfig('user.email', 'sudo-bot@wdes.fr');
+                git.addConfig('user.name', 'Sudo Bot');
+                fs.writeFileSync(repoDir + 'README.md', '#test');
+                git.add('.')
+                    .then(() => {
+                        git.commit('__INIT__', ['README.md'], {
+                            '--no-gpg-sign': null,
+                        })
+                            .then(() => {
+                                fs.writeFileSync(repoDir + 'README.md', '# changed');
+                                files.listGitModifiedFiles(
+                                    repoDir,
+                                    (modifiedFiles) => {
+                                        expect(modifiedFiles).to.deep.equal(['README.md']);
+                                        fs.unlinkSync(repoDir + 'README.md');
+                                        files.deleteFolderRecursive(repoDir + '.git');
+                                        done();
+                                    },
+                                    () => {}
+                                );
+                            })
+                            .catch(done);
+                    })
+                    .catch(done);
+            })
+            .catch(done);
     });
     test('getModifiedFiles', function (done) {
         const repoDir = __dirname + '/data/testrepo/';

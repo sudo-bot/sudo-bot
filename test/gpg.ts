@@ -2,12 +2,15 @@
 
 import gpg from '../src/gpg';
 import { expect } from 'chai';
-import { suite } from 'mocha';
+import { suite, before } from 'mocha';
 
 suite('gpg', function () {
-    process.env.GPG_PRIV_PATH = process.env.GPG_PRIV_PATH || __dirname + '/data/sudo-bot-test.priv';
-    process.env.GPG_PUB_PATH = process.env.GPG_PUB_PATH || __dirname + '/data/sudo-bot-test.pub';
-    process.env.GPG_PRIV_PASSWORD = process.env.GPG_PRIV_PASSWORD || 'fYWwRmbkcd3tXSqcCrjWBCFBhzEW6ASP98zcSH';
+    before(() => {
+        process.env = {};
+        process.env.GPG_PRIV_PATH = process.env.GPG_PRIV_PATH || __dirname + '/data/sudo-bot-test.priv';
+        process.env.GPG_PUB_PATH = process.env.GPG_PUB_PATH || __dirname + '/data/sudo-bot-test.pub';
+        process.env.GPG_PRIV_PASSWORD = process.env.GPG_PRIV_PASSWORD || 'fYWwRmbkcd3tXSqcCrjWBCFBhzEW6ASP98zcSH';
+    });
     test('testAutoSign', function (done) {
         const testMessage = '';
         gpg.signCommit(testMessage)
