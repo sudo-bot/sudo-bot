@@ -27,7 +27,8 @@
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
         "prettier": "prettier --ignore-path ./.prettierignore --write \"*/**/*.js\" \"*/**/*.ts\"",
         "sudo-bot": "node bin/sudo-bot.js",
-        "build": "tsc"
+        "build": "tsc",
+        "prepublishOnly": "rm -rf dist/ && yarn run -s build"
     },
     "keywords": [
         "bot",
