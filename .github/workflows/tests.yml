@@ -39,4 +39,4 @@ jobs:
                   yarn run test
                   yarn run report-coverage
             - name: Send coverage
-              uses: codecov/codecov-action@v2
+              uses: codecov/codecov-action@v1
