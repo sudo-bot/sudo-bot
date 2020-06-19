@@ -27,7 +27,7 @@ jobs:
               run: yarn install
             - name: Prepare files
               run: |
-                  whereis env && env node -v && whereis node && node -v
+                  apk add --no-cache openssh-client git bash
                   ssh-keygen -P "" -t rsa -b 4096 -m PEM -f jwtRS256.pem
                   mkdir -p $PWD/test/data/testrepo
             - name: Run node tests
