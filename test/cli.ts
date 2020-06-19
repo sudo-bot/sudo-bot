@@ -2,7 +2,7 @@
 
 import { expect } from 'chai';
 import { suite, before } from 'mocha';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 
 suite('cli', function () {
     const binSudoBot: string = __dirname + '/../bin/sudo-bot.js';
@@ -10,7 +10,7 @@ suite('cli', function () {
         process.env = {};
     });
     test('--env missing', function (done) {
-        exec(binSudoBot, (err, stdout, stderr) => {
+        execFile(binSudoBot, (err, stdout, stderr) => {
             expect(err).to.not.equal(null);
             expect(stderr).to.equal(
                 '\n  error: option `--env <file>` missing\n\n  Try `sudo-bot --help` for more information.\n\n'
@@ -24,7 +24,7 @@ suite('cli', function () {
         process.env.APP_ID = '';
         process.env.REPO_DIR = __dirname + '/../';
         process.env.DOT_IGNORE = __dirname + '/../.gitignore';
-        exec(binSudoBot + ' --env ' + __dirname + '/../.env.dist', (err, stdout, stderr) => {
+        execFile(binSudoBot, ['--env', __dirname + '/../.env.dist'], (err, stdout, stderr) => {
             expect(err).to.equal(null);
             expect(stdout).to.equal('');
             expect(stderr).to.match(/Error: Missing APP_ID ENV/m);
@@ -37,7 +37,7 @@ suite('cli', function () {
         process.env.REPO_DIR = __dirname + '/../';
         process.env.DOT_IGNORE = __dirname + '/../.gitignore';
         process.env.JWT_PRIV_KEY_PATH = process.env.JWT_PRIV_KEY_PATH || __dirname + '/data/jwtRS256.pem';
-        exec(binSudoBot + ' --env ' + __dirname + '/../.env.dist', (err, stdout, stderr) => {
+        execFile(binSudoBot, ['--env', __dirname + '/../.env.dist'], (err, stdout, stderr) => {
             expect(err).to.equal(null);
             expect(stdout).to.equal('');
             expect(stderr).to.match(/Error: Missing INSTALLATION_ID ENV/m);
