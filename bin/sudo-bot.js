@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env nodejs
 const cli = require('snack-cli');
 const packageJson = require(__dirname + '/../package.json');
 
