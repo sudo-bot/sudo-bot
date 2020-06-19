@@ -82,14 +82,18 @@ const listGitModifiedFiles = function (
     cbSuccess: (status: any) => void,
     cbError: (err: Error) => void
 ) {
-    const sg: SimpleGit = simpleGit(repoDir);
-    sg.status()
-        .then((status) => {
-            cbSuccess(status.modified);
-        })
-        .catch((err) => {
-            cbError(err);
-        });
+    try {
+        const sg: SimpleGit = simpleGit(repoDir);
+        sg.status()
+            .then((status) => {
+                cbSuccess(status.modified);
+            })
+            .catch((err) => {
+                cbError(err);
+            });
+    } catch (err) {
+        cbError(err);
+    }
 };
 
 export default {

@@ -5,6 +5,87 @@ import git from './git';
 import files from './files';
 import templates from './templates';
 
+const processModifiedFiles = (enableLogging: boolean, modifiedFiles: string[], targetBranch: string) => {
+    if (enableLogging) {
+        console.log('Listing OK !');
+    }
+    const filteredFiles = files.filterAllowedFiles(modifiedFiles);
+    if (enableLogging) {
+        console.log('Filtering OK !');
+        console.log('Original', modifiedFiles);
+        console.log('Filter', filteredFiles);
+    }
+    if (filteredFiles.length === 0) {
+        if (enableLogging) {
+            console.log('No files to send, skipping !');
+        }
+        return;
+    }
+    const appId: string = process.env.APP_ID || '';
+    if (appId === '') {
+        console.error(new Error('Missing APP_ID ENV.'));
+        return;
+    }
+    git.auth(jwt.jsonwebtoken(appId))
+        .then((octokit) => {
+            if (enableLogging) {
+                console.log('Login OK !');
+                console.log('Sending ...');
+            }
+            git.sendFiles(
+                octokit,
+                templates.commitMessage(filteredFiles),
+                files.getModifiedFiles(filteredFiles),
+                targetBranch,
+                templates.prBranch(filteredFiles)
+            )
+                .then((result) => {
+                    if (enableLogging) {
+                        console.log('Files sent !');
+                    }
+                    git.createPullRequest(
+                        octokit,
+                        templates.prMessage(filteredFiles),
+                        result.ref.ref,
+                        targetBranch,
+                        templates.prContent(filteredFiles)
+                    )
+                        .then((pullRequest) => {
+                            if (enableLogging) {
+                                console.log('PR done !');
+                            }
+                            if (typeof process.env.ASSIGN_USERS === 'string') {
+                                const assignees = process.env.ASSIGN_USERS.split(',').map((as) => as.trim());
+                                git.addAssignees(octokit, pullRequest.data.number, assignees)
+                                    .then((res) => {
+                                        if (enableLogging) {
+                                            console.log(
+                                                'Assigned : ' + res.data.assignees.map((as) => as.login).join(',')
+                                            );
+                                        }
+                                    })
+                                    .catch((err) => {
+                                        console.error(err);
+                                    });
+                            } else {
+                                if (enableLogging) {
+                                    console.log('Nobody to assign.');
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+};
+
 /**
  * Get modifications and create a PR
  * @param {boolean} enableLogging Enable logging
@@ -23,89 +104,9 @@ export const doProcess = function (enableLogging: boolean, targetBranch: string,
     }
     files.listGitModifiedFiles(
         process.env.REPO_DIR || '',
-        (modifiedFiles) => {
-            if (enableLogging) {
-                console.log('Listing OK !');
-            }
-            const filteredFiles = files.filterAllowedFiles(modifiedFiles);
-            if (enableLogging) {
-                console.log('Filtering OK !');
-                console.log('Original', modifiedFiles);
-                console.log('Filter', filteredFiles);
-            }
-            if (filteredFiles.length === 0) {
-                if (enableLogging) {
-                    console.log('No files to send, skipping !');
-                }
-                return;
-            }
-            const appId: string = process.env.APP_ID || '';
-            if (appId === '') {
-                console.error(new Error('Missing APP_ID ENV.'));
-                return;
-            }
-            git.auth(jwt.jsonwebtoken(appId))
-                .then((octokit) => {
-                    if (enableLogging) {
-                        console.log('Login OK !');
-                        console.log('Sending ...');
-                    }
-                    git.sendFiles(
-                        octokit,
-                        templates.commitMessage(filteredFiles),
-                        files.getModifiedFiles(filteredFiles),
-                        targetBranch,
-                        templates.prBranch(filteredFiles)
-                    )
-                        .then((result) => {
-                            if (enableLogging) {
-                                console.log('Files sent !');
-                            }
-                            git.createPullRequest(
-                                octokit,
-                                templates.prMessage(filteredFiles),
-                                result.ref.ref,
-                                targetBranch,
-                                templates.prContent(filteredFiles)
-                            )
-                                .then((pullRequest) => {
-                                    if (enableLogging) {
-                                        console.log('PR done !');
-                                    }
-                                    if (typeof process.env.ASSIGN_USERS === 'string') {
-                                        const assignees = process.env.ASSIGN_USERS.split(',').map((as) => as.trim());
-                                        git.addAssignees(octokit, pullRequest.data.number, assignees)
-                                            .then((res) => {
-                                                if (enableLogging) {
-                                                    console.log(
-                                                        'Assigned : ' +
-                                                            res.data.assignees.map((as) => as.login).join(',')
-                                                    );
-                                                }
-                                            })
-                                            .catch((err) => {
-                                                console.error(err);
-                                            });
-                                    } else {
-                                        if (enableLogging) {
-                                            console.log('Nobody to assign.');
-                                        }
-                                    }
-                                })
-                                .catch((err) => {
-                                    console.error(err);
-                                });
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                        });
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-        },
+        (modifiedFiles) => processModifiedFiles(enableLogging, modifiedFiles, targetBranch),
         (err) => {
-            console.error('Error: ', err.message);
+            console.error('Error:', err.message);
         }
     );
 
