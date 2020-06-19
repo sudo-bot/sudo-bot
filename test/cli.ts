@@ -20,8 +20,8 @@ suite('cli', function () {
         process.env.REPO_DIR = __dirname + '/../';
         process.env.DOT_IGNORE = __dirname + '/../.gitignore';
         exec(__dirname + '/../bin/sudo-bot.js --env ' + __dirname + '/../.env.dist', (err, stdout, stderr) => {
-            expect(stderr).to.contain('Error: Missing APP_ID ENV.');
             expect(stdout).to.equal('');
+            expect(stderr).to.contain('Error: Missing APP_ID ENV.');
             done();
         });
     });
@@ -31,8 +31,8 @@ suite('cli', function () {
         process.env.REPO_DIR = __dirname + '/../';
         process.env.DOT_IGNORE = __dirname + '/../.gitignore';
         exec(__dirname + '/../bin/sudo-bot.js --env ' + __dirname + '/../.env.dist', (err, stdout, stderr) => {
-            expect(stderr).to.contain('Error: Missing INSTALLATION_ID ENV.');
             expect(stdout).to.equal('');
+            expect(stderr).to.contain('Error: Missing INSTALLATION_ID ENV.');
             done();
         });
     });
