@@ -8,3 +8,7 @@
 /.github
 /.dependabot
 /*.log
+*.ts
+!*.d.ts
+*.lcov
+/tsconfig.json
