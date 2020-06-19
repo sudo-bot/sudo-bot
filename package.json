@@ -18,7 +18,7 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "test": "nyc mocha --ui tdd --reporter spec",
+        "test": "yarn run -s build && nyc mocha --ui tdd --reporter spec",
         "jshint": "jshint ./",
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
         "prettier": "prettier --ignore-path ./.prettierignore --write \"*/**/*.js\" \"*.js\"",
