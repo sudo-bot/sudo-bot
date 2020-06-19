@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import ignore from 'ignore';
-import simpleGit, {SimpleGit} from 'simple-git';
+import simpleGit, { SimpleGit } from 'simple-git';
 
 export interface LocalFile {
     path: string;
@@ -77,11 +77,19 @@ const filterAllowedFiles = function (files: string[]) {
     return ignoreFiles.filter(files);
 };
 
-const listGitModifiedFiles = function (cbSuccess: (status: any) => void) {
-    const sg: SimpleGit = simpleGit(process.env.REPO_DIR);
-    sg.status().then((status) => {
-        cbSuccess(status.modified);
-    });
+const listGitModifiedFiles = function (
+    repoDir: string,
+    cbSuccess: (status: any) => void,
+    cbError: (err: Error) => void
+) {
+    const sg: SimpleGit = simpleGit(repoDir);
+    sg.status()
+        .then((status) => {
+            cbSuccess(status.modified);
+        })
+        .catch((err) => {
+            cbError(err);
+        });
 };
 
 export default {

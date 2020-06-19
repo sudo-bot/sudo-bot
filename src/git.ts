@@ -12,10 +12,14 @@ function auth(jwt: string): Promise<Octokit> {
         var octokitJwtInstance = new Octokit({
             auth: jwt,
         });
-
+        const installationId: string = process.env.INSTALLATION_ID || '';
+        if (installationId !== '') {
+            reject(new Error('Missing INSTALLATION_ID ENV.'));
+            return;
+        }
         octokitJwtInstance.apps
             .createInstallationAccessToken({
-                installation_id: parseInt(process.env.INSTALLATION_ID || ''),
+                installation_id: parseInt(installationId),
             })
             .then((res) => {
                 let octokitTokenInstance: Octokit = new Octokit({
@@ -42,8 +46,8 @@ function sendFiles(
     defaultBranch: string = 'main',
     targetBranch: string = 'refs/heads/update/' + new Date(new Date().toUTCString()).getTime()
 ): Promise<{
-    ref: any,
-    commit: any,
+    ref: any;
+    commit: any;
 }> {
     return new Promise((resolve, reject) => {
         const owner = process.env.OWNER || '';
@@ -152,7 +156,14 @@ function sendFiles(
  * @param {string} message The message
  * @param {boolean} mcm Maintainers can modify
  */
-function createPullRequest(octokit: Octokit, title: string, sourceBranch: string, targetBranch: string, message: string, mcm: boolean = true) {
+function createPullRequest(
+    octokit: Octokit,
+    title: string,
+    sourceBranch: string,
+    targetBranch: string,
+    message: string,
+    mcm: boolean = true
+) {
     return octokit.pulls.create({
         owner: process.env.OWNER || '',
         repo: process.env.REPO || '',

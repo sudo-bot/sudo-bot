@@ -42,6 +42,6 @@ const getDefaultExport = () => {
         prContent: prContent,
         prBranch: prBranch,
     };
-}
+};
 
 export default getDefaultExport();

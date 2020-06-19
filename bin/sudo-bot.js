@@ -13,4 +13,5 @@ var argv = cli
     .allowArgumentCount(1)
     .parse();
 
-require(__dirname + '/../dist/index').default(argv.verbose, argv.targetBranch, argv.env);
+const index = require(__dirname + '/../dist/index');
+index.doProcess(argv.verbose, argv.targetBranch, argv.env);

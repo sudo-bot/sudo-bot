@@ -71,7 +71,13 @@ const signCommit = function (messageRaw: string): Promise<string> {
  * @param {string} signatureRaw The raw signature
  * @param {string} messageRaw The raw message
  */
-const verifySignature = function (signatureRaw: string, messageRaw: string) {
+const verifySignature = function (
+    signatureRaw: string,
+    messageRaw: string
+): Promise<{
+    valid: boolean;
+    keyId: string;
+}> {
     const publicKeyRaw = fs.readFileSync(process.env.GPG_PUB_PATH || '').toString('utf8');
     //console.log("rawmsg: ", { messageRaw, signatureRaw });
     return new Promise((resolve, reject) => {
@@ -103,7 +109,6 @@ const verifySignature = function (signatureRaw: string, messageRaw: string) {
         });
     });
 };
-
 
 export default {
     verifySignature: verifySignature,
