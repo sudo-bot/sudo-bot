@@ -1,10 +1,12 @@
 'use strict';
 
+import TemplateInterface, { TemplateFunction } from './TemplateInterface';
+
 /**
  * @param {string[]} modifiedFiles The modified files
  * @returns {string} The commit message
  */
-const commitMessage = function (modifiedFiles: string[]) {
+const commitMessage: TemplateFunction = function (modifiedFiles: string[]): string {
     return 'Some files to update';
 };
 
@@ -12,7 +14,7 @@ const commitMessage = function (modifiedFiles: string[]) {
  * @param {string[]} modifiedFiles The modified files
  * @returns {string} The pr message
  */
-const prMessage = function (modifiedFiles: string[]) {
+const prMessage: TemplateFunction = function (modifiedFiles: string[]): string {
     return '🤖🚨 Update data';
 };
 
@@ -20,7 +22,7 @@ const prMessage = function (modifiedFiles: string[]) {
  * @param {string[]} modifiedFiles The modified files
  * @returns {string} The pr content
  */
-const prContent = function (modifiedFiles: string[]) {
+const prContent: TemplateFunction = function (modifiedFiles: string[]): string {
     return 'Some files to update\nSee diff';
 };
 
@@ -28,7 +30,7 @@ const prContent = function (modifiedFiles: string[]) {
  * @param {string[]} modifiedFiles The modified files
  * @returns {string} The pr branch
  */
-const prBranch = function (modifiedFiles: string[]) {
+const prBranch: TemplateFunction = function (modifiedFiles: string[]): string {
     return 'refs/heads/update/' + new Date().getTime();
 };
 
@@ -36,12 +38,13 @@ const getDefaultExport = () => {
     if (process.env.TEMPLATE_FILE) {
         return require(process.env.TEMPLATE_FILE);
     }
-    return {
+    const template: TemplateInterface = {
         commitMessage: commitMessage,
         prMessage: prMessage,
         prContent: prContent,
         prBranch: prBranch,
     };
+    return template;
 };
 
 export default getDefaultExport();

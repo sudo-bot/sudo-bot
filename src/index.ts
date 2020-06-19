@@ -114,3 +114,5 @@ export const doProcess = function (enableLogging: boolean, targetBranch: string,
         console.log('Done !');
     }
 };
+
+export * from './TemplateInterface';
