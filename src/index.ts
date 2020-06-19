@@ -39,7 +39,12 @@ export const doProcess = function (enableLogging: boolean, targetBranch: string,
                 }
                 return;
             }
-            git.auth(jwt.jsonwebtoken(process.env.APP_ID || ''))
+            const appId: string = process.env.APP_ID || '';
+            if (appId === '') {
+                console.error(new Error('Missing APP_ID ENV.'));
+                return;
+            }
+            git.auth(jwt.jsonwebtoken(appId))
                 .then((octokit) => {
                     if (enableLogging) {
                         console.log('Login OK !');

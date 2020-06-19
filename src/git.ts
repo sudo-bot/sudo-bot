@@ -9,14 +9,14 @@ import { LocalFile } from './files';
  */
 function auth(jwt: string): Promise<Octokit> {
     return new Promise((resolve, reject) => {
-        var octokitJwtInstance = new Octokit({
-            auth: jwt,
-        });
         const installationId: string = process.env.INSTALLATION_ID || '';
-        if (installationId !== '') {
+        if (installationId === '') {
             reject(new Error('Missing INSTALLATION_ID ENV.'));
             return;
         }
+        const octokitJwtInstance = new Octokit({
+            auth: jwt,
+        });
         octokitJwtInstance.apps
             .createInstallationAccessToken({
                 installation_id: parseInt(installationId),
