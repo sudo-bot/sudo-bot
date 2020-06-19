@@ -1,6 +1,7 @@
 'use strict';
 
 import { Octokit } from '@octokit/rest';
+import { OctokitResponse } from '@octokit/types';
 import gpg from './gpg';
 import { LocalFile } from './files';
 
@@ -163,7 +164,7 @@ function createPullRequest(
     targetBranch: string,
     message: string,
     mcm: boolean = true
-) {
+): Promise<OctokitResponse<any>> {
     return octokit.pulls.create({
         owner: process.env.OWNER || '',
         repo: process.env.REPO || '',
@@ -181,7 +182,17 @@ function createPullRequest(
  * @param {number} number The issue or PR id
  * @param {string[]} assignees The assignees
  */
-function addAssignees(octokit: Octokit, number: number, assignees: string[]) {
+function addAssignees(
+    octokit: Octokit,
+    number: number,
+    assignees: string[]
+): Promise<
+    OctokitResponse<{
+        assignees: {
+            login: string;
+        }[];
+    }>
+> {
     return octokit.issues.addAssignees({
         owner: process.env.OWNER || '',
         repo: process.env.REPO || '',
