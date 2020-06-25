@@ -3,11 +3,17 @@
 import jwt from './jwt';
 import git from './git';
 import files from './files';
-import templates from './templates';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
+import TemplateInterface from './TemplateInterface';
+import templates from './templates';
 
-const processModifiedFiles = (enableLogging: boolean, modifiedFiles: string[], targetBranch: string) => {
+const processModifiedFiles = (
+    enableLogging: boolean,
+    modifiedFiles: string[],
+    targetBranch: string,
+    templates: TemplateInterface
+) => {
     if (enableLogging) {
         console.log('Listing OK !');
     }
@@ -96,26 +102,12 @@ const processModifiedFiles = (enableLogging: boolean, modifiedFiles: string[], t
 };
 
 /**
- * Get modifications and create a PR
+ * Process the imported template file
  * @param {boolean} enableLogging Enable logging
  * @param {string} targetBranch The target branch
- * @param {string} envFile Path to the .env file
+ * @param {TemplateInterface} templates The template
  */
-export const doProcess = function (enableLogging: boolean, targetBranch: string, envFile: string): void {
-    if (enableLogging) {
-        console.log('Launching sudo bot ...');
-    }
-
-    dotenv.config({ path: envFile, debug: enableLogging ? true : undefined });
-
-    if (enableLogging) {
-        if (fs.existsSync(envFile)) {
-            console.log('DotEnv file exists !');
-        } else {
-            console.log('DotEnv does NOT exist at ' + envFile + ' !');
-        }
-    }
-
+const processPostImport = function (enableLogging: boolean, targetBranch: string, templates: TemplateInterface): void {
     if (enableLogging) {
         console.log('Listing ...');
     }
@@ -125,7 +117,7 @@ export const doProcess = function (enableLogging: boolean, targetBranch: string,
             if (enableLogging) {
                 console.log('Modified files before filtering:', modifiedFiles.length);
             }
-            return processModifiedFiles(enableLogging, modifiedFiles, targetBranch);
+            return processModifiedFiles(enableLogging, modifiedFiles, targetBranch, templates);
         },
         (err) => {
             console.error('Error:', err.message);
@@ -137,4 +129,30 @@ export const doProcess = function (enableLogging: boolean, targetBranch: string,
     }
 };
 
+/**
+ * Get modifications and create a PR
+ * @param {boolean} enableLogging Enable logging
+ * @param {string} targetBranch The target branch
+ * @param {string} envFile Path to the .env file
+ */
+export const doProcess = function (enableLogging: boolean, targetBranch: string, envFile: string): void {
+    if (enableLogging) {
+        console.log('Launching sudo bot ...');
+    }
+
+    if (enableLogging) {
+        if (fs.existsSync(envFile)) {
+            console.log('DotEnv file exists !');
+        } else {
+            console.error('DotEnv does NOT exist at ' + envFile + ' !');
+        }
+    }
+
+    dotenv.config({ path: envFile, debug: enableLogging ? true : undefined });
+
+    const templatesFile: string = './templates';
+    import(templatesFile).then((templates: TemplateInterface) => {
+        processPostImport(enableLogging, targetBranch, templates);
+    });
+};
 export * from './TemplateInterface';

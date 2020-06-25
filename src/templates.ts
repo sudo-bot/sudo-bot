@@ -34,7 +34,7 @@ const prBranch: TemplateFunction = function (modifiedFiles: string[]): string {
     return 'refs/heads/update/' + new Date().getTime();
 };
 
-const getDefaultExport = () => {
+const getDefaultExport = function (): TemplateInterface {
     if (typeof process.env.TEMPLATE_FILE === 'string') {
         return require(process.env.TEMPLATE_FILE);
     }
