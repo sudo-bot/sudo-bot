@@ -1,6 +1,6 @@
 {
     "name": "sudo-bot",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "A GitHub PR robot",
     "main": "bin/sudo-bot.js",
     "types": "dist/index.d.ts",
