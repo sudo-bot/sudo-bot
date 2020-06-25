@@ -4,15 +4,23 @@ import jwt from './jwt';
 import git from './git';
 import files from './files';
 import templates from './templates';
+import * as fs from 'fs';
+import * as dotenv from 'dotenv';
 
 const processModifiedFiles = (enableLogging: boolean, modifiedFiles: string[], targetBranch: string) => {
     if (enableLogging) {
         console.log('Listing OK !');
     }
-    const filteredFiles = files.filterAllowedFiles(modifiedFiles);
+    const dotIgnoreEnabled: boolean = typeof process.env.DOT_IGNORE === 'string';
+
+    const filteredFiles = files.filterAllowedFiles(
+        dotIgnoreEnabled ? process.env.DOT_IGNORE || '' : null,
+        modifiedFiles
+    );
     if (enableLogging) {
         console.log('Filtering OK !');
         console.log('Original', modifiedFiles);
+        console.log('Dot ignore enabled:', dotIgnoreEnabled);
         console.log('Filter', filteredFiles);
     }
     if (filteredFiles.length === 0) {
@@ -31,11 +39,12 @@ const processModifiedFiles = (enableLogging: boolean, modifiedFiles: string[], t
             if (enableLogging) {
                 console.log('Login OK !');
                 console.log('Sending ...');
+                console.log('Template:', process.env.TEMPLATE_FILE || null);
             }
             git.sendFiles(
                 octokit,
                 templates.commitMessage(filteredFiles),
-                files.getModifiedFiles(filteredFiles),
+                files.getModifiedFiles(process.env.REPO_DIR || '', filteredFiles),
                 targetBranch,
                 templates.prBranch(filteredFiles)
             )
@@ -97,14 +106,27 @@ export const doProcess = function (enableLogging: boolean, targetBranch: string,
         console.log('Launching sudo bot ...');
     }
 
-    require('dotenv').config({ path: envFile });
+    dotenv.config({ path: envFile, debug: enableLogging ? true : undefined });
+
+    if (enableLogging) {
+        if (fs.existsSync(envFile)) {
+            console.log('DotEnv file exists !');
+        } else {
+            console.log('DotEnv does NOT exist at ' + envFile + ' !');
+        }
+    }
 
     if (enableLogging) {
         console.log('Listing ...');
     }
     files.listGitModifiedFiles(
         process.env.REPO_DIR || '',
-        (modifiedFiles) => processModifiedFiles(enableLogging, modifiedFiles, targetBranch),
+        (modifiedFiles) => {
+            if (enableLogging) {
+                console.log('Modified files before filtering:', modifiedFiles.length);
+            }
+            return processModifiedFiles(enableLogging, modifiedFiles, targetBranch);
+        },
         (err) => {
             console.error('Error:', err.message);
         }

@@ -35,7 +35,7 @@ const prBranch: TemplateFunction = function (modifiedFiles: string[]): string {
 };
 
 const getDefaultExport = () => {
-    if (process.env.TEMPLATE_FILE) {
+    if (typeof process.env.TEMPLATE_FILE === 'string') {
         return require(process.env.TEMPLATE_FILE);
     }
     const template: TemplateInterface = {

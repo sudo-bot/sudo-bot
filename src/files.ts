@@ -34,14 +34,13 @@ function fileToString(file: string) {
 
 /**
  * Get modified files ready to send to git as strings
- * @param {string[]} fsFiles The files paths
  */
-const getModifiedFiles = function (fsFiles: string[]): LocalFile[] {
+const getModifiedFiles = function (repoDir: string, fsFiles: string[]): LocalFile[] {
     var files: LocalFile[] = [];
     fsFiles.map((file) => {
         files.push({
             path: file,
-            content: fileToString(path.join(process.env.REPO_DIR || '', file)),
+            content: fileToString(path.join(repoDir, file)),
         });
     });
     return files;
@@ -69,10 +68,10 @@ const deleteFolderRecursive = function (path: string) {
 /**
  * Filter allowed files using ignore
  */
-const filterAllowedFiles = function (files: string[]) {
+const filterAllowedFiles = function (ignoreFile: string | null, files: string[]) {
     var ignoreFiles = ignore();
-    if (typeof process.env.DOT_IGNORE === 'string') {
-        ignoreFiles.add(fs.readFileSync(process.env.DOT_IGNORE).toString());
+    if (ignoreFile) {
+        ignoreFiles.add(fs.readFileSync(ignoreFile).toString());
     }
     return ignoreFiles.filter(files);
 };
