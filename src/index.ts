@@ -150,9 +150,8 @@ export const doProcess = function (enableLogging: boolean, targetBranch: string,
 
     dotenv.config({ path: envFile, debug: enableLogging ? true : undefined });
 
-    const templatesFile: string = './templates';
-    import(templatesFile).then((templates: TemplateInterface) => {
-        processPostImport(enableLogging, targetBranch, templates);
+    import('./templates').then((templates) => {
+        processPostImport(enableLogging, targetBranch, templates.default);
     });
 };
 export * from './TemplateInterface';
