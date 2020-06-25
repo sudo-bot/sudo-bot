@@ -52,14 +52,14 @@
         "ignore": "^5.1.8",
         "jsonwebtoken": "^8.5.1",
         "openpgp": "^4.10.4",
-        "simple-git": "^2.8.0",
+        "simple-git": "^2.11.0",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
         "@types/chai": "^4.2.11",
         "@types/jsonwebtoken": "^8.5.0",
         "@types/mocha": "^7.0.2",
-        "@types/node": "^14.0.13",
+        "@types/node": "^14.0.14",
         "@types/openpgp": "^4.4.12",
         "chai": "^4.2.0",
         "jshint": "^2.11.1",
