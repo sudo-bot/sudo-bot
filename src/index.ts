@@ -75,7 +75,8 @@ const processModifiedFiles = (
                                     .then((res) => {
                                         if (enableLogging) {
                                             console.log(
-                                                'Assigned : ' + res.data.assignees.map((as) => as.login).join(',')
+                                                'Assigned : ' +
+                                                    (res.data.assignees || []).map((as) => (as as any).login).join(',')
                                             );
                                         }
                                     })

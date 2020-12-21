@@ -2,6 +2,7 @@
 
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
+import { components } from '@octokit/openapi-types';
 import gpg from './gpg';
 import { LocalFile } from './files';
 
@@ -56,7 +57,7 @@ function sendFiles(
         octokit.repos
             .listCommits({ owner, repo, sha: defaultBranch, per_page: 1 })
             .then((commitsres) => {
-                const lastCommit = commitsres.data[0].sha;
+                const lastCommit: string = commitsres.data[0].sha as string;
                 const commitDate = new Date(new Date().toUTCString());
                 const identity = {
                     name: process.env.BOT_NAME,
@@ -150,7 +151,7 @@ function sendFiles(
 
 /**
  * Create a pull-request
- * @param {Octokit} octokit The Octikit instance
+ * @param {Octokit} octokit The Octokit instance
  * @param {string} title The title
  * @param {string} sourceBranch The source branch
  * @param {string} targetBranch The target branch
@@ -186,13 +187,7 @@ function addAssignees(
     octokit: Octokit,
     number: number,
     assignees: string[]
-): Promise<
-    OctokitResponse<{
-        assignees: {
-            login: string;
-        }[];
-    }>
-> {
+): Promise<OctokitResponse<components['schemas']['issue-simple']>> {
     return octokit.issues.addAssignees({
         owner: process.env.OWNER || '',
         repo: process.env.REPO || '',
