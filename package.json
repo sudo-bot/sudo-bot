@@ -48,7 +48,6 @@
     "license": "MPL-2.0",
     "dependencies": {
         "@octokit/rest": "^18.5.2",
-        "dotenv": "^8.2.0",
         "ignore": "^5.1.8",
         "jsonwebtoken": "^8.5.1",
         "openpgp": "^4.10.10",

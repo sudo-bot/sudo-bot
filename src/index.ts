@@ -3,77 +3,92 @@
 import jwt from './jwt';
 import git from './git';
 import files from './files';
-import * as fs from 'fs';
-import * as dotenv from 'dotenv';
 import TemplateInterface from './TemplateInterface';
-import templates from './templates';
+import { Octokit } from '@octokit/rest';
+import { Func } from 'mocha';
+import { type } from 'os';
 
-const processModifiedFiles = (
-    enableLogging: boolean,
-    modifiedFiles: string[],
-    targetBranch: string,
-    templates: TemplateInterface
-) => {
-    if (enableLogging) {
+interface DataParams {
+    repositorySlug: string;
+    usernamesAssigned: string | null;
+    repoDir: string;
+    GitHubInstallationId: string;
+    GitHubAppId: string;
+    jwtFile: string;
+    dotIgnoreFile: string | null;
+    enableLogging: boolean;
+    targetBranch: string;
+    template: TemplateInterface;
+    authorIdentity: {
+        name: string;
+        email: string;
+    };
+    privateKey: {
+        file: string;
+        passphrase: string;
+    };
+}
+
+const processModifiedFiles = (p: DataParams, modifiedFiles: string[]) => {
+    if (p.enableLogging) {
         console.log('Listing OK !');
     }
-    const dotIgnoreEnabled: boolean = typeof process.env.DOT_IGNORE === 'string';
+    const dotIgnoreEnabled: boolean = typeof p.dotIgnoreFile === 'string';
 
-    const filteredFiles = files.filterAllowedFiles(
-        dotIgnoreEnabled ? process.env.DOT_IGNORE || '' : null,
-        modifiedFiles
-    );
-    if (enableLogging) {
+    const filteredFiles = files.filterAllowedFiles(dotIgnoreEnabled ? p.dotIgnoreFile : null, modifiedFiles);
+    if (p.enableLogging) {
         console.log('Filtering OK !');
         console.log('Original', modifiedFiles);
         console.log('Dot ignore enabled:', dotIgnoreEnabled);
         console.log('Filter', filteredFiles);
     }
     if (filteredFiles.length === 0) {
-        if (enableLogging) {
+        if (p.enableLogging) {
             console.log('No files to send, skipping !');
         }
         return;
     }
-    const appId: string = process.env.APP_ID || '';
-    if (appId === '') {
-        console.error(new Error('Missing APP_ID ENV.'));
-        return;
-    }
-    git.auth(jwt.jsonwebtoken(appId))
-        .then((octokit) => {
-            if (enableLogging) {
+    git.auth(jwt.jsonwebtoken(p.GitHubAppId, p.jwtFile), p.GitHubInstallationId)
+        .then((octokit: Octokit) => {
+            const slugParts = p.repositorySlug.split('/');
+            const { repoOwner, repoName } = { repoOwner: slugParts[0], repoName: slugParts[1] };
+            if (p.enableLogging) {
                 console.log('Login OK !');
                 console.log('Sending ...');
-                console.log('Template:', process.env.TEMPLATE_FILE || null);
             }
             git.sendFiles(
+                repoOwner,
+                repoName,
                 octokit,
-                templates.commitMessage(filteredFiles),
-                files.getModifiedFiles(process.env.REPO_DIR || '', filteredFiles),
-                targetBranch,
-                templates.prBranch(filteredFiles)
+                p.template.commitMessage(filteredFiles),
+                files.getModifiedFiles(p.repoDir, filteredFiles),
+                p.targetBranch,
+                p.template.prBranch(filteredFiles),
+                p.authorIdentity,
+                p.privateKey
             )
                 .then((result) => {
-                    if (enableLogging) {
+                    if (p.enableLogging) {
                         console.log('Files sent !');
                     }
                     git.createPullRequest(
+                        repoOwner,
+                        repoName,
                         octokit,
-                        templates.prMessage(filteredFiles),
+                        p.template.prMessage(filteredFiles),
                         result.ref.ref,
-                        targetBranch,
-                        templates.prContent(filteredFiles)
+                        p.targetBranch,
+                        p.template.prContent(filteredFiles)
                     )
                         .then((pullRequest) => {
-                            if (enableLogging) {
+                            if (p.enableLogging) {
                                 console.log('PR done !');
                             }
-                            if (typeof process.env.ASSIGN_USERS === 'string') {
-                                const assignees = process.env.ASSIGN_USERS.split(',').map((as) => as.trim());
-                                git.addAssignees(octokit, pullRequest.data.number, assignees)
+                            if (typeof p.usernamesAssigned === 'string') {
+                                const assignees = p.usernamesAssigned.split(',').map((as) => as.trim());
+                                git.addAssignees(repoOwner, repoName, octokit, pullRequest.data.number, assignees)
                                     .then((res) => {
-                                        if (enableLogging) {
+                                        if (p.enableLogging) {
                                             console.log(
                                                 'Assigned : ' +
                                                     (res.data.assignees || []).map((as) => (as as any).login).join(',')
@@ -84,7 +99,7 @@ const processModifiedFiles = (
                                         console.error(err);
                                     });
                             } else {
-                                if (enableLogging) {
+                                if (p.enableLogging) {
                                     console.log('Nobody to assign.');
                                 }
                             }
@@ -108,51 +123,97 @@ const processModifiedFiles = (
  * @param {string} targetBranch The target branch
  * @param {TemplateInterface} templates The template
  */
-const processPostImport = function (enableLogging: boolean, targetBranch: string, templates: TemplateInterface): void {
-    if (enableLogging) {
+const processPostImport = function (p: DataParams): void {
+    if (p.enableLogging) {
         console.log('Listing ...');
     }
     files.listGitModifiedFiles(
-        process.env.REPO_DIR || '',
+        p.repoDir,
         (modifiedFiles) => {
-            if (enableLogging) {
+            if (p.enableLogging) {
                 console.log('Modified files before filtering:', modifiedFiles.length);
             }
-            return processModifiedFiles(enableLogging, modifiedFiles, targetBranch, templates);
+
+            return processModifiedFiles(p, modifiedFiles);
         },
         (err) => {
             console.error('Error:', err.message);
         }
     );
 
-    if (enableLogging) {
+    if (p.enableLogging) {
         console.log('Done !');
     }
 };
 
+type onSuccess = (template: TemplateInterface) => void;
+
+export const doImportTemplate = function (enableLogging: boolean, templateFile: string | null, success: onSuccess) {
+    import('./templates').then((defaultTemplate) => {
+        var template: TemplateInterface = defaultTemplate.default;
+        //defaultTemplate
+        if (typeof templateFile === 'string' && templateFile !== '') {
+            if (enableLogging) {
+                console.log('Loading custom template: ' + templateFile);
+            }
+            template = require(templateFile);
+        } else {
+            if (enableLogging) {
+                console.log('Normal template loaded');
+            }
+        }
+        if (typeof template.commitMessage !== 'function') {
+            console.error('The template seems invalid');
+            process.exit();
+        }
+        success(template);
+    });
+};
+
 /**
  * Get modifications and create a PR
- * @param {boolean} enableLogging Enable logging
- * @param {string} targetBranch The target branch
- * @param {string} envFile Path to the .env file
  */
-export const doProcess = function (enableLogging: boolean, targetBranch: string, envFile: string): void {
+export const doProcess = function (
+    enableLogging: boolean,
+    targetBranch: string,
+    dotIgnoreFile: string | '',
+    templateFile: string | '',
+    usernamesAssigned: string | '',
+    repositorySlug: string,
+    GitHubInstallationId: string,
+    GitHubAppId: string,
+    jwtFile: string,
+    repoDir: string,
+    commitAuthorEmail: string,
+    commitAuthorName: string,
+    gpgPrivateKeyFile: string,
+    gpgPrivateKeyPassphrase: string
+): void {
     if (enableLogging) {
         console.log('Launching sudo bot ...');
     }
-
-    if (enableLogging) {
-        if (fs.existsSync(envFile)) {
-            console.log('DotEnv file exists !');
-        } else {
-            console.error('DotEnv does NOT exist at ' + envFile + ' !');
-        }
-    }
-
-    dotenv.config({ path: envFile, debug: enableLogging ? true : undefined });
-
-    import('./templates').then((templates) => {
-        processPostImport(enableLogging, targetBranch, templates.default);
+    doImportTemplate(enableLogging, templateFile, (template) => {
+        const dataParams: DataParams = {
+            enableLogging,
+            targetBranch,
+            dotIgnoreFile: dotIgnoreFile === '' ? null : dotIgnoreFile,
+            template,
+            usernamesAssigned: usernamesAssigned === '' ? null : usernamesAssigned,
+            repositorySlug,
+            GitHubInstallationId,
+            GitHubAppId,
+            jwtFile,
+            repoDir,
+            authorIdentity: {
+                email: commitAuthorEmail,
+                name: commitAuthorName,
+            },
+            privateKey: {
+                file: gpgPrivateKeyFile,
+                passphrase: gpgPrivateKeyPassphrase,
+            },
+        };
+        processPostImport(dataParams);
     });
 };
 export * from './TemplateInterface';

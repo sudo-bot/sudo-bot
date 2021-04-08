@@ -34,17 +34,11 @@ const prBranch: TemplateFunction = function (modifiedFiles: string[]): string {
     return 'refs/heads/update/' + new Date().getTime();
 };
 
-const getDefaultExport = function (): TemplateInterface {
-    if (typeof process.env.TEMPLATE_FILE === 'string') {
-        return require(process.env.TEMPLATE_FILE);
-    }
-    const template: TemplateInterface = {
-        commitMessage: commitMessage,
-        prMessage: prMessage,
-        prContent: prContent,
-        prBranch: prBranch,
-    };
-    return template;
+const template: TemplateInterface = {
+    commitMessage: commitMessage,
+    prMessage: prMessage,
+    prContent: prContent,
+    prBranch: prBranch,
 };
 
-export default getDefaultExport();
+export default template;
