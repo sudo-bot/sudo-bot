@@ -13,11 +13,34 @@ Repo for @sudo-bot
 
 ## Create automatic PRs for changed files
 
-Run `index.js`
+Using yarn
 
-or using npm
+- `yarn add sudo-bot`
+- `npx sudo-bot` or `./node_modules/.bin/sudo-bot`
 
-- `npm install sudo-bot`
-- `npx sudo-bot`
+```help
+$ ./node_modules/.bin/sudo-bot --help
+Usage: sudo-bot [options]
 
-[the npm command "npx"](https://www.npmjs.com/package/npx)
+A GitHub PR robot
+
+Options:
+      --jwt-file <jwtFile>                                     The JWT file for the GitHub app
+      --gh-app-id <GitHubAppId>                                The App Id of the GitHub app
+      --installation-id <GitHubInstallationId>                 The Installation Id of the GitHub app
+      --repository-slug <repositorySlug>                       The slug for the repository ({orgname|username}/{repo})
+      --target-branch <targetBranch>                           The target branch for the PR (default: main)
+      --assign <usernamesAssigned>                             The GitHub usernames to assign (example: user1, user2)
+      --template <templateFile>                                The template to generate PR descriptions
+      --ignore-file <ignoreFile>                               The file to use as like a .gitignore file
+      --repository-dir <repoDir>                               The repository directory (default: /mnt/Dev/@sudo/sudo-bot)
+      --commit-author-email <commitAuthorEmail>                The email of the committer
+      --commit-author-name <commitAuthorName>                  The name of the committer
+      --gpg-private-key-file <gpgPrivateKeyFile>               The file path the to GPG key
+      --gpg-private-key-passphrase <gpgPrivateKeyPassphrase>   The passphrase of the GPG key
+      --verbose                                                Turn on logging
+      --version                                                display version information and exit
+      --help                                                   display this help and exit
+
+
+```
