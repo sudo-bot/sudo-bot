@@ -7,7 +7,7 @@ import { JWS_REGEX } from '../src/git';
 
 suite('jwt', function () {
     test('testGenerateJWT', function (done) {
-        expect(jwt.jsonwebtoken('1234', __dirname + '/data/jwtRS256.pem')).to.match(JWS_REGEX);
+        expect(jwt.jsonwebtoken('17453', __dirname + '/data/jwtRS256.pem')).to.match(JWS_REGEX);
         done();
     });
 });
