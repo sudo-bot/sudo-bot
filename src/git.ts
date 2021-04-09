@@ -6,13 +6,20 @@ import { components } from '@octokit/openapi-types';
 import gpg from './gpg';
 import { LocalFile } from './files';
 
+export const JWS_REGEX = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/;
+
 /**
  * Authenticate
  */
-function auth(jwt: string, installationId: string): Promise<Octokit> {
+function auth(repositorySlug: string, jwt: string, installationId: string): Promise<Octokit> {
     return new Promise((resolve, reject) => {
-        if (installationId === '') {
-            reject(new Error('Missing INSTALLATION_ID ENV.'));
+        const GitHubInstallationId: number = parseInt(installationId, 10);
+        if (typeof GitHubInstallationId !== 'number') {
+            reject(new Error('Wrong value for --installation-id'));
+            return;
+        }
+        if (jwt.match(JWS_REGEX) === null) {
+            reject(new Error('Invalid JWT: ' + jwt));
             return;
         }
         const octokitJwtInstance = new Octokit({
@@ -20,7 +27,8 @@ function auth(jwt: string, installationId: string): Promise<Octokit> {
         });
         octokitJwtInstance.apps
             .createInstallationAccessToken({
-                installation_id: parseInt(installationId),
+                installation_id: GitHubInstallationId,
+                repositories: [repositorySlug],
             })
             .then((res) => {
                 let octokitTokenInstance: Octokit = new Octokit({

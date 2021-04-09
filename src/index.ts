@@ -48,10 +48,13 @@ const processModifiedFiles = (p: DataParams, modifiedFiles: string[]) => {
         }
         return;
     }
-    git.auth(jwt.jsonwebtoken(p.GitHubAppId, p.jwtFile), p.GitHubInstallationId)
+    const slugParts = p.repositorySlug.split('/');
+    const { repoOwner, repoName } = { repoOwner: slugParts[0], repoName: slugParts[1] };
+    if (p.enableLogging) {
+        console.log('Repository: ' + p.repositorySlug);
+    }
+    git.auth(p.repositorySlug, jwt.jsonwebtoken(p.GitHubAppId, p.jwtFile), p.GitHubInstallationId)
         .then((octokit: Octokit) => {
-            const slugParts = p.repositorySlug.split('/');
-            const { repoOwner, repoName } = { repoOwner: slugParts[0], repoName: slugParts[1] };
             if (p.enableLogging) {
                 console.log('Login OK !');
                 console.log('Sending ...');

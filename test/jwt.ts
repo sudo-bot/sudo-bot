@@ -2,9 +2,8 @@
 
 import jwt from '../src/jwt';
 import { expect } from 'chai';
-import { suite, before } from 'mocha';
-
-const JWS_REGEX = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/;
+import { suite } from 'mocha';
+import { JWS_REGEX } from '../src/git';
 
 suite('jwt', function () {
     test('testGenerateJWT', function (done) {
