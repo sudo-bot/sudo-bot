@@ -18,6 +18,11 @@ function auth(repositorySlug: string, jwt: string, installationId: string): Prom
             reject(new Error('Wrong value for --installation-id'));
             return;
         }
+        // An arbitrary value to test the value
+        if (GitHubInstallationId < 4000) {
+            reject(new Error('Wrong value for --installation-id'));
+            return;
+        }
         if (jwt.match(JWS_REGEX) === null) {
             reject(new Error('Invalid JWT: ' + jwt));
             return;

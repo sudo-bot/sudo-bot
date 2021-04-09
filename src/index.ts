@@ -53,6 +53,9 @@ const processModifiedFiles = (p: DataParams, modifiedFiles: string[]) => {
     if (p.enableLogging) {
         console.log('Repository: ' + p.repositorySlug);
     }
+    if (p.enableLogging) {
+        console.log('AppId: ' + p.GitHubAppId);
+    }
     git.auth(p.repositorySlug, jwt.jsonwebtoken(p.GitHubAppId, p.jwtFile), p.GitHubInstallationId)
         .then((octokit: Octokit) => {
             if (p.enableLogging) {
