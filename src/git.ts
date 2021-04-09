@@ -11,7 +11,7 @@ export const JWS_REGEX = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)
 /**
  * Authenticate
  */
-function auth(repositorySlug: string, jwt: string, installationId: string): Promise<Octokit> {
+function auth(repositoryName: string, jwt: string, installationId: string): Promise<Octokit> {
     return new Promise((resolve, reject) => {
         const GitHubInstallationId: number = parseInt(installationId, 10);
         if (typeof GitHubInstallationId !== 'number') {
@@ -33,7 +33,12 @@ function auth(repositorySlug: string, jwt: string, installationId: string): Prom
         octokitJwtInstance.apps
             .createInstallationAccessToken({
                 installation_id: GitHubInstallationId,
-                repositories: [repositorySlug],
+                permissions: {
+                    contents: 'write',
+                    metadata: 'read',
+                    pull_requests: 'write',
+                },
+                repositories: [repositoryName], // Not the slug, only the name
             })
             .then((res) => {
                 let octokitTokenInstance: Octokit = new Octokit({
