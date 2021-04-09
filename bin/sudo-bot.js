@@ -35,7 +35,7 @@ try {
         argv.assign,
         argv.repositorySlug,
         argv.installationId,
-        argv.GitHubAppId,
+        argv.ghAppId,
         argv.jwtFile,
         argv.repositoryDir,
         argv.commitAuthorEmail,
