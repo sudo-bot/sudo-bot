@@ -100,6 +100,7 @@ const processModifiedFiles = (p: DataParams, modifiedFiles: string[]) => {
                                     })
                                     .catch((err) => {
                                         console.error(err);
+                                        process.exitCode = 1;
                                     });
                             } else {
                                 if (p.enableLogging) {
@@ -109,14 +110,17 @@ const processModifiedFiles = (p: DataParams, modifiedFiles: string[]) => {
                         })
                         .catch((err) => {
                             console.error(err);
+                            process.exitCode = 1;
                         });
                 })
                 .catch((err) => {
                     console.error(err);
+                    process.exitCode = 1;
                 });
         })
         .catch((err) => {
             console.error(err);
+            process.exitCode = 1;
         });
 };
 
