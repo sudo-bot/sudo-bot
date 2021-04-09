@@ -1,7 +1,7 @@
 {
     "name": "sudo-bot",
     "version": "2.0.2",
-    "description": "A GitHub PR robot",
+    "description": "Create GitHub pull-requests as an app from the CLI",
     "main": "bin/sudo-bot.js",
     "types": "dist/index.d.ts",
     "private": false,
@@ -31,6 +31,7 @@
         "prepublishOnly": "rm -rf dist/ && yarn run -s build"
     },
     "keywords": [
+        "git",
         "bot",
         "pr",
         "github"

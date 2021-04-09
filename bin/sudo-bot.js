@@ -16,7 +16,7 @@ try {
         .option('    --assign <usernamesAssigned>', 'The GitHub usernames to assign (example: user1, user2)', '')
         .option('    --template <templateFile>', 'The template to generate PR descriptions', '')
         .option('    --ignore-file <ignoreFile>', 'The file to use as like a .gitignore file', '')
-        .option('    --repository-dir <repoDir>', 'The repository directory', process.cwd())
+        .option('    --repository-dir <repositoryDir>', 'The repository directory', process.cwd())
         .option('    --commit-author-email <commitAuthorEmail>', 'The email of the committer')
         .option('    --commit-author-name <commitAuthorName>', 'The name of the committer')
         .option('    --gpg-private-key-file <gpgPrivateKeyFile>', 'The file path the to GPG key')
@@ -26,17 +26,18 @@ try {
         .parse();
 
     const index = require(__dirname + '/../dist/index');
+
     index.doProcess(
         argv.verbose,
         argv.targetBranch,
         argv.ignoreFile,
-        argv.templateFile,
-        argv.usernamesAssigned,
+        argv.template,
+        argv.assign,
         argv.repositorySlug,
-        argv.GitHubInstallationId,
+        argv.installationId,
         argv.GitHubAppId,
         argv.jwtFile,
-        argv.repoDir,
+        argv.repositoryDir,
         argv.commitAuthorEmail,
         argv.commitAuthorName,
         argv.gpgPrivateKeyFile,

@@ -22,7 +22,7 @@ Using yarn
 $ ./node_modules/.bin/sudo-bot --help
 Usage: sudo-bot [options]
 
-A GitHub PR robot
+Create GitHub pull-requests as an app from the CLI
 
 Options:
       --jwt-file <jwtFile>                                     The JWT file for the GitHub app
@@ -33,7 +33,7 @@ Options:
       --assign <usernamesAssigned>                             The GitHub usernames to assign (example: user1, user2)
       --template <templateFile>                                The template to generate PR descriptions
       --ignore-file <ignoreFile>                               The file to use as like a .gitignore file
-      --repository-dir <repoDir>                               The repository directory (default: /mnt/Dev/@sudo/sudo-bot)
+      --repository-dir <repositoryDir>                         The repository directory (default: /mnt/Dev/@sudo/sudo-bot)
       --commit-author-email <commitAuthorEmail>                The email of the committer
       --commit-author-name <commitAuthorName>                  The name of the committer
       --gpg-private-key-file <gpgPrivateKeyFile>               The file path the to GPG key

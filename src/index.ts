@@ -5,8 +5,6 @@ import git from './git';
 import files from './files';
 import TemplateInterface from './TemplateInterface';
 import { Octokit } from '@octokit/rest';
-import { Func } from 'mocha';
-import { type } from 'os';
 
 interface DataParams {
     repositorySlug: string;
