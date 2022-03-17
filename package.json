@@ -52,7 +52,7 @@
         "ignore": "^5.1.8",
         "jsonwebtoken": "^8.5.1",
         "openpgp": "^4.10.10",
-        "simple-git": "^2.37.0",
+        "simple-git": "^3.3.0",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
