@@ -6,14 +6,6 @@ openpgp.config.showComment = false;
 openpgp.config.showVersion = false;
 
 /**
- * Encode the message
- * @param {string} messageRaw The raw message
- */
-const encodeMsg = function (messageRaw: string) {
-    return openpgp.createCleartextMessage({ text: messageRaw });
-};
-
-/**
  * Sign a message
  * @param {string} messageRaw The raw message
  */
@@ -37,13 +29,13 @@ const signCommit = function (
                         passphrase: privateKeyPassphrase,
                     })
                     .then((privateKey) => {
-                        encodeMsg(messageRaw)
+                        openpgp
+                            .createCleartextMessage({ text: messageRaw })
                             .then((message) => {
                                 openpgp
                                     .sign({
-                                        message: message, // CleartextMessage or Message object
+                                        message: message,
                                         signingKeys: privateKey,
-                                        detached: true,
                                     })
                                     .then((signature) => {
                                         resolve(signature.replace(/\r\n/g, '\n'));
