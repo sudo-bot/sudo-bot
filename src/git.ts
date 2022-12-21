@@ -1,6 +1,6 @@
 'use strict';
 
-import { Octokit } from '@octokit/rest';
+import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
 import { components } from '@octokit/openapi-types';
 import gpg from './gpg';
@@ -224,7 +224,7 @@ function addAssignees(
     octokit: Octokit,
     number: number,
     assignees: string[]
-): Promise<OctokitResponse<components['schemas']['issue-simple']>> {
+): Promise<RestEndpointMethodTypes['issues']['addAssignees']['response']> {
     return octokit.issues.addAssignees({
         owner: repoOwner,
         repo: repoName,

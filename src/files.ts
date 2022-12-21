@@ -92,7 +92,7 @@ const listGitModifiedFiles = function (
                 process.exitCode = 1;
             });
     } catch (err) {
-        cbError(err);
+        cbError(err as Error);
     }
 };
 
