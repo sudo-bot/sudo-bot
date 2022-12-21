@@ -2,15 +2,15 @@
 
 import * as openpgp from 'openpgp';
 import * as fs from 'fs';
-openpgp.config.show_comment = false;
-openpgp.config.show_version = false;
+openpgp.config.showComment = false;
+openpgp.config.showVersion = false;
 
 /**
  * Encode the message
  * @param {string} messageRaw The raw message
  */
 const encodeMsg = function (messageRaw: string) {
-    return openpgp.message.fromBinary(Buffer.from(messageRaw, 'utf8'));
+    return openpgp.createCleartextMessage({ text: messageRaw });
 };
 
 /**
@@ -24,28 +24,37 @@ const signCommit = function (
         passphrase: string;
     }
 ): Promise<string> {
-    const privateKeyRaw = fs.readFileSync(privateKey.file).toString('utf8');
-    //console.log("rawmsg: ", { messageRaw });
-    return new Promise<string>((resolve, reject) => {
-        const message = encodeMsg(messageRaw);
-        openpgp.key.readArmored(privateKeyRaw).then((privKeys) => {
-            const privateKeys = privKeys.keys;
-            privateKeys.map((key) => {
-                key.decrypt(privateKey.passphrase);
-            });
-            const options = {
-                message: message,
-                privateKeys: privateKeys,
-                detached: true,
-            };
+    const privateKeyArmored = fs.readFileSync(privateKey.file).toString('utf8');
+    const privateKeyPassphrase = privateKey.passphrase;
 
-            openpgp
-                .sign(options)
-                .then((signed) => {
-                    resolve(signed.signature.replace(/\r\n/g, '\n'));
-                })
-                .catch(reject);
-        });
+    return new Promise<string>((resolve, reject) => {
+        openpgp
+            .readPrivateKey({ armoredKey: privateKeyArmored })
+            .then((privKey) => {
+                openpgp
+                    .decryptKey({
+                        privateKey: privKey,
+                        passphrase: privateKeyPassphrase,
+                    })
+                    .then((privateKey) => {
+                        encodeMsg(messageRaw)
+                            .then((message) => {
+                                openpgp
+                                    .sign({
+                                        message: message, // CleartextMessage or Message object
+                                        signingKeys: privateKey,
+                                        detached: true,
+                                    })
+                                    .then((signature) => {
+                                        resolve(signature.replace(/\r\n/g, '\n'));
+                                    })
+                                    .catch(reject);
+                            })
+                            .catch(reject);
+                    })
+                    .catch(reject);
+            })
+            .catch(reject);
     });
 };
 
