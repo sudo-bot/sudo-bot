@@ -56,6 +56,7 @@
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
+        "@openpgp/web-stream-tools": "^0.0.13",
         "@types/chai": "^4.3.4",
         "@types/jsonwebtoken": "^8.5.9",
         "@types/mocha": "^10.0.1",

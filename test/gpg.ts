@@ -12,9 +12,9 @@ suite('gpg', function () {
             passphrase: 'fYWwRmbkcd3tXSqcCrjWBCFBhzEW6ASP98zcSH',
         })
             .then((signature) => {
-                expect(signature).to.include(
-                    '-----BEGIN PGP SIGNED MESSAGE-----\nHash: SHA512\n\ntestok\n-----BEGIN PGP SIGNATURE-----\n\n'
-                );
+                expect(signature).to.not.include('-----BEGIN PGP SIGNED MESSAGE-----');
+                expect(signature).to.not.include('Hash: SHA512');
+                expect(signature).to.not.include('testok', "because it's a detached signature");
                 expect(signature).to.include('-----BEGIN PGP SIGNATURE-----\n\n');
                 expect(signature).to.include('\n-----END PGP SIGNATURE-----\n');
                 done();

@@ -30,12 +30,13 @@ const signCommit = function (
                     })
                     .then((privateKey) => {
                         openpgp
-                            .createCleartextMessage({ text: messageRaw })
+                            .createMessage({ text: messageRaw })
                             .then((message) => {
                                 openpgp
                                     .sign({
                                         message: message,
                                         signingKeys: privateKey,
+                                        detached: true,
                                     })
                                     .then((signature) => {
                                         resolve(signature.replace(/\r\n/g, '\n'));
