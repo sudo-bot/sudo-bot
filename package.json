@@ -19,7 +19,7 @@
         "sudo-bot": "bin/sudo-bot.js"
     },
     "engines": {
-        "node": ">=8.0.0"
+        "node": ">=14"
     },
     "scripts": {
         "test": "rm -rf dist/ && yarn run -s build && nyc mocha --ui tdd --reporter spec test/*.ts",
