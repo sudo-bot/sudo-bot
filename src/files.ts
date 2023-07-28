@@ -85,7 +85,13 @@ const listGitModifiedFiles = function (
         const sg: SimpleGit = simpleGit(repoDir);
         sg.status()
             .then((status) => {
-                cbSuccess(status.modified);
+                var files = [];
+                files.push(...status.modified);
+                files.push(...status.renamed);
+                files.push(...status.created);
+                files.push(...status.deleted);
+                files.push(...status.not_added);
+                cbSuccess(files);
             })
             .catch((err) => {
                 cbError(err);
