@@ -1,6 +1,6 @@
 {
     "name": "sudo-bot",
-    "version": "2.0.6",
+    "version": "2.1.0",
     "description": "Create GitHub pull-requests as an app from the CLI",
     "main": "bin/sudo-bot.js",
     "types": "dist/index.d.ts",
