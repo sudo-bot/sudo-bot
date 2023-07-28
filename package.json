@@ -48,27 +48,27 @@
     },
     "license": "MPL-2.0",
     "dependencies": {
-        "@octokit/rest": "^19.0.5",
+        "@octokit/rest": "^20.0.1",
         "ignore": "^5.2.4",
-        "jsonwebtoken": "^9.0.0",
-        "openpgp": "^5.5.0",
-        "simple-git": "^3.15.1",
+        "jsonwebtoken": "^9.0.1",
+        "openpgp": "^5.9.0",
+        "simple-git": "^3.19.1",
         "snack-cli": "^2.0.0"
     },
     "devDependencies": {
-        "@openpgp/web-stream-tools": "^0.0.13",
-        "@types/chai": "^4.3.4",
-        "@types/jsonwebtoken": "^8.5.9",
+        "@openpgp/web-stream-tools": "^0.0.14",
+        "@types/chai": "^4.3.5",
+        "@types/jsonwebtoken": "^9.0.2",
         "@types/mocha": "^10.0.1",
-        "@types/node": "^18.11.17",
+        "@types/node": "^20.4.5",
         "@types/openpgp": "^4.4.18",
         "chai": "^4.3.7",
         "jshint": "^2.13.6",
         "mocha": "^10.2.0",
         "nyc": "^15.1.0",
-        "prettier": "^2.8.1",
+        "prettier": "^3.0.0",
         "ts-node": "^10.9.1",
-        "typescript": "^4.9.4"
+        "typescript": "^5.1.6"
     },
     "prettier": {
         "singleQuote": true,
