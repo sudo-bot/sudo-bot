@@ -10,7 +10,7 @@ jobs:
             image: node:${{ matrix.node_version }}-alpine
         strategy:
             matrix:
-                node_version: ["14", "16", "18"]
+                node_version: ["14", "16", "18", "20"]
 
         steps:
             - uses: actions/checkout@v3
