@@ -37,9 +37,10 @@ const signCommit = function (
                                         message: message,
                                         signingKeys: privateKey,
                                         detached: true,
+                                        format: 'armored',
                                     })
                                     .then((signature) => {
-                                        resolve(signature.replace(/\r\n/g, '\n'));
+                                        resolve(signature as string);
                                     })
                                     .catch(reject);
                             })

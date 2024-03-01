@@ -15,6 +15,7 @@ suite('gpg', function () {
                 expect(signature).to.not.include('-----BEGIN PGP SIGNED MESSAGE-----');
                 expect(signature).to.not.include('Hash: SHA512');
                 expect(signature).to.not.include('testok', "because it's a detached signature");
+                expect(signature).to.not.include('\r', 'It should not contain \r but only \n');
                 expect(signature).to.include('-----BEGIN PGP SIGNATURE-----\n\n');
                 expect(signature).to.include('\n-----END PGP SIGNATURE-----\n');
                 done();
