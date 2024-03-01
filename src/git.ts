@@ -101,6 +101,15 @@ function sendFiles(
                         owner,
                         repo,
                         tree: files.map((file) => {
+                            if (file.is_deleted) {
+                                return {
+                                    mode: '100644', // The file mode; one of 100644 for file (blob)
+                                    type: 'blob',
+                                    path: file.path,
+                                    // Delete the file
+                                    sha: null, // If the value is null then the file will be deleted.
+                                };
+                            }
                             return {
                                 mode: '100644', // The file mode; one of 100644 for file (blob)
                                 type: 'blob',

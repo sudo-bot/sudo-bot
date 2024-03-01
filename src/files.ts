@@ -8,6 +8,7 @@ import simpleGit, { SimpleGit } from 'simple-git';
 export interface LocalFile {
     path: string;
     content: string;
+    is_deleted: boolean;
 }
 
 /**
@@ -38,10 +39,20 @@ function fileToString(file: string) {
 const getModifiedFiles = function (repoDir: string, fsFiles: string[]): LocalFile[] {
     var files: LocalFile[] = [];
     fsFiles.map((file) => {
-        files.push({
-            path: file,
-            content: fileToString(path.join(repoDir, file)),
-        });
+        let filePath = path.join(repoDir, file);
+        if (fs.existsSync(filePath) === false) {
+            files.push({
+                path: file,
+                content: '',
+                is_deleted: true,
+            });
+        } else {
+            files.push({
+                path: file,
+                content: fileToString(filePath),
+                is_deleted: false,
+            });
+        }
     });
     return files;
 };
