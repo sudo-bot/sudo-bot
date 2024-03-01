@@ -1,5 +1,8 @@
 name: Lint files
 
+permissions:
+    contents: read
+
 on: [push]
 
 jobs:
